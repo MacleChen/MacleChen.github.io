@@ -1,1 +1,128 @@
-Hello world2
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人宣传网页 - iOS 开发工程师</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        header {
+            background-color: #0078d7;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+        section {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        h2 {
+            color: #0078d7;
+            border-left: 4px solid #0078d7;
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            padding: 5px 0;
+            line-height: 1.6;
+        }
+        .projects img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        footer {
+            text-align: center;
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .contact a {
+            color: #0078d7;
+            text-decoration: none;
+        }
+        .contact a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="avatar.jpg" alt="个人头像">
+        <h1>麦克917</h1>
+        <p>iOS 开发工程师 | 擅长 Swift 和 Objective-C</p>
+    </header>
+
+    <section>
+        <h2>关于我</h2>
+        <p>你好！我是麦克917，一名专业的 iOS 开发工程师，拥有 10 年以上的开发经验。擅长使用 Swift 和 Objective-C 开发高性能、优雅的移动应用，熟悉 UIKit 和 SwiftUI，热衷于研究新技术并为用户提供最佳体验。</p>
+    </section>
+
+    <section>
+        <h2>技能</h2>
+        <ul>
+            <li>Swift 和 Objective-C 开发</li>
+            <li>熟悉 UIKit、SwiftUI 和 Combine 框架</li>
+            <li>深刻理解 Core Data、Core Animation 和多线程技术</li>
+            <li>API 集成（RESTful、GraphQL）</li>
+            <li>单元测试与持续集成（XCTest、Fastlane）</li>
+            <li>熟练使用 Xcode 和 Git</li>
+        </ul>
+    </section>
+
+    <section class="projects">
+        <h2>项目展示</h2>
+        <ul>
+            <li>
+                <h3>任务管理 App</h3>
+                <p>一款基于 SwiftUI 开发的任务管理工具，支持跨设备同步和深色模式。</p>
+                <img src="project1.jpg" alt="任务管理 App 截图">
+            </li>
+            <li>
+                <h3>在线教育平台</h3>
+                <p>全面支持音视频播放、交互式课堂功能的在线教育 App。</p>
+                <img src="project2.jpg" alt="在线教育平台截图">
+            </li>
+        </ul>
+    </section>
+
+    <section class="contact">
+        <h2>联系方式</h2>
+        <p>邮箱：<a href="foverleee@mail.com">li.si@example.com</a></p>
+        <p>GitHub：<a href="https://github.com/lisi-iosdev" target="_blank">https://github.com/MacleChen</a></p>
+        <p>手机：133-7952-3124</p>
+    </section>
+
+    <footer>
+        <p>© 2024 麦克917. 保留所有权利。</p>
+    </footer>
+</body>
+</html>
