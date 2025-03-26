@@ -1,128 +1,280 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人宣传网页 - iOS 开发工程师</title>
+    <title>Your Name - IT Portfolio</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
-            color: #343a40;
+            color: #fff;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
         }
         header {
-            background-color: #0078d7;
-            color: white;
+            padding: 3rem 1rem;
             text-align: center;
-            padding: 30px 20px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.5s ease;
         }
-        header img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid white;
+        .profile-container {
             margin-bottom: 20px;
         }
-        header h1 {
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, border-color 0.5s ease;
+        }
+        .profile-img:hover {
+            transform: scale(1.1);
+        }
+        h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: fadeInDown 1s ease;
         }
-        header p {
-            margin: 10px 0;
+        p.subtitle {
             font-size: 1.2rem;
+            opacity: 0.9;
         }
-        section {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .section {
+            margin-bottom: 60px;
+            animation: fadeInUp 1s ease;
         }
         h2 {
-            color: #0078d7;
-            border-left: 4px solid #0078d7;
-            padding-left: 10px;
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        .project {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        ul li {
-            padding: 5px 0;
-            line-height: 1.6;
+        .project:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
-        .projects img {
-            max-width: 100%;
+        .project img {
+            max-width: 250px;
             height: auto;
             border-radius: 8px;
-            margin-top: 10px;
+            transition: transform 0.3s ease, border-color 0.5s ease;
+        }
+        .project:hover img {
+            transform: scale(1.05);
+        }
+        .project-content {
+            flex: 1;
+        }
+        .project h3 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+            color: #e0e0e0;
+        }
+        .project p {
+            margin: 0 0 10px;
+            opacity: 0.8;
+        }
+        .project a {
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.5s ease;
+        }
+        .project a:hover {
+            color: #fff;
+            text-decoration: underline;
         }
         footer {
             text-align: center;
-            background-color: #343a40;
-            color: white;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.5s ease;
         }
-        .contact a {
-            color: #0078d7;
-            text-decoration: none;
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
-        .contact a:hover {
-            text-decoration: underline;
+        .lang-switch button {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 25px;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+        .lang-switch button:hover {
+            background: #3498db;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        /* English Theme (default) */
+        body.en {
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a4066 100%);
+        }
+        header.en {
+            background: linear-gradient(90deg, #3498db, #8e44ad);
+        }
+        footer.en {
+            background: #1e1e2f;
+        }
+        .project.en img {
+            border: 2px solid #3498db;
+        }
+        .project.en a {
+            color: #00d4ff;
+        }
+        .en .profile-img {
+            border-color: #3498db;
+        }
+        /* Chinese Theme */
+        body.zh {
+            background: linear-gradient(135deg, #3e1e2f 0%, #66332a 100%);
+        }
+        header.zh {
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+        footer.zh {
+            background: #3e1e2f;
+        }
+        .project.zh img {
+            border: 2px solid #e74c3c;
+        }
+        .project.zh a {
+            color: #ffcc00;
+        }
+        .zh .profile-img {
+            border-color: #e74c3c;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
-    <header>
-        <img src="avatar.jpg" alt="个人头像">
-        <h1>麦克917</h1>
-        <p>iOS 开发工程师 | 擅长 Swift 和 Objective-C</p>
+<body class="en">
+    <header class="en">
+        <div class="profile-container">
+            <img src="images/profile.png" alt="Your Profile Picture" class="profile-img">
+        </div>
+        <h1 class="lang" data-en="Macle Chen" data-zh="陈海华">Macle Chen</h1>
+        <p class="subtitle lang" data-en="iOS Developer | Reverse Engineering" data-zh="iOS开发者 | 逆向开发">[Your Skills]</p>
+        <div class="lang-switch">
+            <button onclick="switchLang('en')">English</button>
+            <button onclick="switchLang('zh')">中文</button>
+        </div>
     </header>
 
-    <section>
-        <h2>关于我</h2>
-        <p>你好！我是麦克917，一名专业的 iOS 开发工程师，拥有 10 年以上的开发经验。擅长使用 Swift 和 Objective-C 开发高性能、优雅的移动应用，熟悉 UIKit 和 SwiftUI，热衷于研究新技术并为用户提供最佳体验。</p>
-    </section>
+    <div class="container">
+        <div class="section">
+            <h2 class="lang" data-en="About Me" data-zh="关于我">About Me</h2>
+            <p class="lang" data-en="Hello! I am Haihua, a passionate IT professional with rich experience in reverse development, Python crawler, Java front-end and back-end, Mac, iOS, Android, etc. I like to solve problems and create meaningful solutions." data-zh="你好！我是海华，一名充满激情的IT专业人士，拥有逆向开发, Python爬虫, java前后端，Mac，ios，Android等资深开发经验。我喜欢解决问题并打造有意义的解决方案。">你好！我是海华，一名充满激情的IT专业人士，拥有逆向开发, Python爬虫, java前后端，Mac，ios，Android等资深开发经验。我喜欢解决问题并打造有意义的解决方案。</p>
+        </div>
 
-    <section>
-        <h2>技能</h2>
-        <ul>
-            <li>Swift 和 Objective-C 开发</li>
-            <li>熟悉 UIKit、SwiftUI 和 Combine 框架</li>
-            <li>深刻理解 Core Data、Core Animation 和多线程技术</li>
-            <li>API 集成（RESTful、GraphQL）</li>
-            <li>单元测试与持续集成（XCTest、Fastlane）</li>
-            <li>熟练使用 Xcode 和 Git</li>
-        </ul>
-    </section>
+        <div class="section">
+            <h2 class="lang" data-en="Projects" data-zh="项目">Projects</h2>
 
-    <section class="projects">
-        <h2>项目展示</h2>
-        <ul>
-            <li>
-                <h3>任务管理 App</h3>
-                <p>一款基于 SwiftUI 开发的任务管理工具，支持跨设备同步和深色模式。</p>
-                <img src="project1.jpg" alt="任务管理 App 截图">
-            </li>
-            <li>
-                <h3>在线教育平台</h3>
-                <p>全面支持音视频播放、交互式课堂功能的在线教育 App。</p>
-                <img src="project2.jpg" alt="在线教育平台截图">
-            </li>
-        </ul>
-    </section>
+            <!-- 项目1： -->
+            <div class="project en">
+                <img src="images/project1.jpg" alt="Project 1 Screenshot">
+                <div class="project-content">
+                    <h3 class="lang" data-en="Project 1: IdeaHub Screen Sharing" data-zh="项目1：IdeaHub屏幕共享">Project 1: IdeaHub屏幕共享</h3>
+                    <p class="lang" data-en="Background: A device that sends iPhone/iPad screen and sound content to Huawei Smart Screen for sharing, supports 30fps video and lossless PCM audio;" data-zh="背景：一款将iPhone/iPad屏幕和声音等内容发送到华为智慧屏上共享，支持30fps视频，无损PCM音频；"></p>
+                    <p class="lang" data-en="Technical solution: Use MVC design pattern, Replaykit data sharing, H264 video encoding, WebRTC audio denoising, Instruments memory optimization, App crash analysis and processing, video YUV transmission efficiency optimization, GCDSocket+memory sharing transmission CMSampleBuffer video data; audio and video data packaging and unpacking processing; YUV420 to RGB data conversion;" data-zh="技术方案：使用MVC设计模式、Replaykit数据共享、H264视频编码、WebRTC音频去噪音、Instruments内存优化、App崩溃分析处理、视频YUV传输效率优化、GCDSocket+内存共享传输CMSampleBuffer视频数据；音视频数据组包拆包处理；YUV420转RGB数据转换；"></p>
+                    <p class="lang" data-en="Effects: 1. Audio and video data can be shared synchronously; 2. Video frame rate increased from 5 frames to 30 frames; 3. CPU performance reduced from 90% to about 45%;"  data-zh="效果：1.可以音视频数据同步共享；2.视频帧率由5帧提升到30帧；3. CPU性能由90%降低到45%左右；"></p>
+                </div>
+            </div>
 
-    <section class="contact">
-        <h2>联系方式</h2>
-        <p>邮箱：<a href="foverleee@mail.com">li.si@example.com</a></p>
-        <p>GitHub：<a href="https://github.com/lisi-iosdev" target="_blank">https://github.com/MacleChen</a></p>
-        <p>手机：133-7952-3124</p>
-    </section>
+            <!-- 项目2： -->
+            <div class="project en">
+                <img src="images/project2.jpg" alt="Project 2 Screenshot">
+                <div class="project-content">
+                    <h3 class="lang" data-en="Project 2: Conference soft terminal" data-zh="项目1：会议软终端">Project 2: 会议软终端</h3>
+                    <p class="lang" data-en="Background: A mobile conference software that can support multi-person video conferencing, one-way live conference, point-to-point audio and video calls, and corporate address book query;" data-zh="背景：一款可以多人视频会议、单向直播会议、点对点音频和视频通话、查询企业通讯录等功能的移动会议软件；"></p>
+                    <p class="lang" data-en="Technical solution: Use MVVM+business integration design pattern to build framework, FMDB+UserDefault data persistence, build user secondary reconnection mechanism, APPGroups video data sharing, data-driven interface to display various video parameters, SVC multi-person video stream display, multi-controller container binding and jump, crash framework construction and analysis; Instruments memory optimization;" data-zh="技术方案：使用MVVM+业务整合设计模式搭建框架、FMDB+UserDefault数据持久化、用户二次重连机制搭建、APPGroups视频数据共享、数据驱动界面展示各种视频参数、SVC多人视频流展示、多控制器容器绑定及跳转, 崩溃框架搭建及分析；Instruments内存优化；
+                    "></p>
+                    <p class="lang" data-en="Effects: 1. Multi-person audio and video conferencing; 2. Crash rate reduced from 20% to <1%; 3. Memory reduced from about 300M to about 200M;"  data-zh="效果：1.多人音视频开会；2.崩溃率由20%降低到<1%;3.内存有300M左右降低到200M左右；
+                    "></p>
+                </div>
+            </div>
 
-    <footer>
-        <p>© 2024 麦克917. 保留所有权利。</p>
+        </div>
+
+        <div class="section">
+            <h2 class="lang" data-en="Skills" data-zh="技能">Skills</h2>
+            <ul>
+                <li class="lang" data-en="Skill 1: Reverse development of Tiktok, Bitpie, Trust, MetaMask and other applications" data-zh="技能1:逆向开发Tiktok, Bitpie, Trust, MetaMask等各类应用">技能1:逆向开发Tiktok, Bitpie, Trust, MetaMask等各类应用</li>
+                <li class="lang" data-en="Skill 2: iOS audio and video compression, noise removal, encoding, transmission and other processing" data-zh="技能2：iOS音视频压缩、去噪音、编码、传输等处理">技能2：iOS音视频压缩、去噪音、编码、传输等处理</li>
+                <li class="lang" data-en="Skill 3: iOS/Android reverse engineering development, Android version iCloud data backup, Mac version Logo generator, Flutter mobile notes, Vue version Web notes, Java backend development, Python crawler/personal blog, WeChat applet voting software development, etc." data-zh="技能3：iOS/Android逆向工程开发、Android版iCloud数据备份、Mac版Logo生成器、Flutter移动笔记、Vue版Web笔记、Java后端开发、Python爬虫/个人博客、微信小程序投票软件等开发">技能3：iOS/Android逆向工程开发、Android版iCloud数据备份、Mac版Logo生成器、Flutter移动笔记、Vue版Web笔记、Java后端开发、Python爬虫/个人博客、微信小程序投票软件等开发</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="lang" data-en="Contact" data-zh="联系方式">Contact</h2>
+            <p>Email: <a href="mailto:foverleee@gmail.com">foverleee@gmail.com</a></p>
+            <p data-en="Telegram: " data-zh="飞机: ">Telegram: <a href="https://web.telegram.org/k/" target="_blank">@ChenSirLite</a></p>
+            <p data-en="GitHub: " data-zh="GitHub: ">GitHub: <a href="https://github.com/MacleChen" target="_blank">MacleChen</a></p>
+        </div>
+    </div>
+
+    <footer class="en">
+        <p class="lang" data-en="© 2025 Macle. All rights reserved." data-zh="© 2025 海华。保留所有权利。">© 2025 [Your Name]. All rights reserved.</p>
     </footer>
+
+    <script>
+        function switchLang(lang) {
+            // Switch text content
+            document.querySelectorAll('.lang').forEach(element => {
+                element.textContent = element.getAttribute(`data-${lang}`);
+            });
+            // Switch theme
+            document.body.className = lang;
+            document.querySelector('header').className = lang;
+            document.querySelector('footer').className = lang;
+            document.querySelectorAll('.project').forEach(project => {
+                project.className = `project ${lang}`;
+            });
+        }
+        // Default to English
+        switchLang('en');
+    </script>
 </body>
 </html>
