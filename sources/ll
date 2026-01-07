@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# ll.sh - 增强版的 ls 命令封装
+
+# 默认参数
+DIR="."
+SORT=""
+COLOR="--color=auto"
+LONG_FORMAT="-lhAF"  # -l: long, -h: human, -A: 隐藏. .., -F: 标记目录/
+
+# 帮助信息
+usage() {
+    echo "用法: $(basename "$0") [选项] [目录]"
+    echo ""
+    echo "选项:"
+    echo "  -t        按时间排序"
+    echo "  -s        按文件大小排序"
+    echo "  -n        禁用颜色显示"
+    echo "  -h        显示帮助信息"
+    echo ""
+    echo "示例:"
+    echo "  ./ll.sh -t /var/log"
+    exit 0
+}
+
+# 解析参数
+while [[ "$1" != "" ]]; do
+    case "$1" in
+        -t)
+            SORT="--sort=time"
+            ;;
+        -s)
+            SORT="--sort=size"
+            ;;
+        -n)
+            COLOR="--color=never"
+            ;;
+        -h)
+            usage
+            ;;
+        -*)
+            echo "未知选项: $1"
+            usage
+            ;;
+        *)
+            DIR="$1"
+            ;;
+    esac
+    shift
+done
+
+# 执行 ls 命令
+ls $LONG_FORMAT $SORT $COLOR "$DIR"
