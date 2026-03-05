@@ -1,404 +1,372 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Macle Chen - iOS Developer</title>
+    <title>Macle Chen — iOS 开发者 · 逆向工程</title>
     <style>
+        :root {
+            --bg:           #0d1117;
+            --bg-card:      #161b22;
+            --bg-hover:     #1c2128;
+            --border:       rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.16);
+            --text:         #e6edf3;
+            --text-muted:   #8b949e;
+            --accent:       #4a9eff;
+            --accent-bg:    rgba(74,158,255,0.1);
+            --accent-bd:    rgba(74,158,255,0.25);
+            --tag-bg:       rgba(255,255,255,0.05);
+            --nav-h:        54px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #fff;
-            overflow-x: hidden;
-            transition: background 0.5s ease;
+            font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0; background: var(--bg); color: var(--text);
+            font-size: 15px; line-height: 1.6; min-height: 100vh;
         }
-        header {
-            padding: 3rem 1rem;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: background 0.5s ease;
-        }
-        .profile-container {
-            margin-bottom: 20px;
-        }
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #fff;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, border-color 0.5s ease;
-        }
-        .profile-img:hover {
-            transform: scale(1.1);
-        }
-        h1 {
-            margin: 0;
-            font-size: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            animation: fadeInDown 1s ease;
-        }
-        p.subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px 20px;
-        }
-        .section {
-            margin-bottom: 60px;
-            animation: fadeInUp 1s ease;
-        }
-        h2 {
-            font-size: 2rem;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-        .project {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .project:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-        }
-        .project img {
-            max-width: 250px;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.3s ease, border-color 0.5s ease;
-        }
-        .project:hover img {
-            transform: scale(1.05);
-        }
-        .project-content {
-            flex: 1;
-        }
-        .project h3 {
-            margin: 0 0 10px;
-            font-size: 1.5rem;
-            color: #e0e0e0;
-        }
-        .project p {
-            margin: 0 0 10px;
-            opacity: 0.8;
-        }
-        .project a {
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.5s ease;
-        }
-        .project a:hover {
-            color: #fff;
-            text-decoration: underline;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            position: relative;
-            width: 100%;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-            transition: background 0.5s ease;
-            margin-top: 20px;
-        }
-        .lang-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .lang-switch button {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border: 1px solid #fff;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 25px;
-            margin-left: 10px;
-            transition: background 0.3s ease;
-        }
-        .lang-switch button:hover {
-            background: #3498db;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        ul li {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-        }
-        /* English Theme (default) */
-        body.en {
-            background: linear-gradient(135deg, #1e1e2f 0%, #2a4066 100%);
-        }
-        header.en {
-            background: linear-gradient(90deg, #3498db, #8e44ad);
-        }
-        footer.en {
-            background: #1e1e2f;
-        }
-        .project.en img {
-            border: 2px solid #3498db;
-        }
-        .project.en a {
-            color: #00d4ff;
-        }
-        .en .profile-img {
-            border-color: #3498db;
-        }
-        /* Chinese Theme */
-        body.zh {
-            background: linear-gradient(135deg, #3e1e2f 0%, #66332a 100%);
-        }
-        header.zh {
-            background: linear-gradient(90deg, #e74c3c, #f39c12);
-        }
-        footer.zh {
-            background: #3e1e2f;
-        }
-        .project.zh img {
-            border: 2px solid #e74c3c;
-        }
-        .project.zh a {
-            color: #ffcc00;
-        }
-        .zh .profile-img {
-            border-color: #e74c3c;
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* ---- Top Nav ---- */
-        .top-nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(15, 12, 41, 0.88);
+        a { color: inherit; text-decoration: none; }
+
+        /* NAV */
+        .nav {
+            position: sticky; top: 0; z-index: 100;
+            height: var(--nav-h);
+            background: rgba(13,17,23,0.96);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            height: 54px;
-            gap: 4px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 28px; gap: 8px;
         }
-        .top-nav a {
-            color: rgba(255,255,255,0.75);
-            text-decoration: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.88rem;
-            transition: all 0.2s;
+        .nav-logo {
+            font-size: 0.98rem; font-weight: 700; letter-spacing: -0.3px;
+            color: var(--text); margin-right: auto;
         }
-        .top-nav a:hover {
-            background: rgba(52,152,219,0.2);
-            color: #3498db;
+        .nav-logo em { color: var(--accent); font-style: normal; }
+        .nav-links { display: flex; gap: 2px; }
+        .nav-links a {
+            color: var(--text-muted); padding: 5px 11px;
+            border-radius: 6px; font-size: 0.875rem; transition: all 0.15s;
         }
-        .top-nav a.blog-link {
-            background: rgba(52,152,219,0.15);
-            color: #3498db;
-            border: 1px solid rgba(52,152,219,0.3);
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .nav-links a.active { color: var(--text); }
+        .lang-toggle {
+            display: flex; overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); border-radius: 6px;
         }
-        .top-nav a.blog-link:hover {
-            background: rgba(52,152,219,0.3);
+        .lang-toggle button {
+            background: transparent; border: none;
+            color: var(--text-muted); padding: 3px 10px;
+            font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
+            font-family: inherit;
         }
-        /* ---- Blog Preview Section ---- */
-        .blog-preview {
+        .lang-toggle button.active { background: var(--accent); color: #fff; }
+        .lang-toggle button:hover:not(.active) { color: var(--text); }
+
+        /* LAYOUT */
+        .page-wrap {
+            max-width: 1060px; margin: 0 auto;
+            padding: 44px 20px 80px;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 52px; align-items: start;
+        }
+
+        /* AUTHOR SIDEBAR */
+        .author-card { position: sticky; top: calc(var(--nav-h) + 24px); }
+        .author-avatar {
+            width: 68px; height: 68px; border-radius: 50%;
+            border: 2px solid var(--border); object-fit: cover;
+            display: block; margin-bottom: 14px;
+            transition: border-color 0.2s;
+        }
+        .author-avatar:hover { border-color: var(--accent); }
+        .author-name { font-size: 1.05rem; font-weight: 700; margin: 0 0 3px; }
+        .author-role {
+            font-size: 0.8rem; color: var(--accent);
+            margin: 0 0 12px; font-weight: 500;
+        }
+        .author-bio {
+            font-size: 0.83rem; color: var(--text-muted);
+            line-height: 1.7; margin: 0 0 16px;
+        }
+        .skill-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 18px; }
+        .chip {
+            padding: 2px 7px; font-size: 0.7rem;
+            background: var(--tag-bg); border: 1px solid var(--border);
+            border-radius: 4px; color: var(--text-muted);
+        }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+        .social-links { display: flex; flex-direction: column; gap: 9px; }
+        .social-link {
+            display: flex; align-items: center; gap: 9px;
+            color: var(--text-muted); font-size: 0.82rem; transition: color 0.15s;
+        }
+        .social-link:hover { color: var(--accent); }
+        .social-icon { width: 14px; text-align: center; opacity: 0.6; }
+
+        /* MAIN */
+        .main-col { min-width: 0; }
+        .sec-hd {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-bottom: 11px; margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sec-label {
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--text-muted); margin: 0;
+        }
+        .sec-more {
+            font-size: 0.82rem; color: var(--accent);
+            display: inline-flex; align-items: center; gap: 3px; transition: gap 0.15s;
+        }
+        .sec-more:hover { gap: 7px; }
+
+        /* POST LIST */
+        .post-list { margin-bottom: 48px; }
+        .post-row {
+            display: block; padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            transition: padding-left 0.15s;
+        }
+        .post-row:first-child { padding-top: 4px; }
+        .post-row:last-child { border-bottom: none; }
+        .post-row:hover { padding-left: 5px; }
+        .row-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .row-cat {
+            padding: 2px 7px; font-size: 0.7rem; font-weight: 600;
+            background: var(--accent-bg); border: 1px solid var(--accent-bd);
+            border-radius: 4px; color: var(--accent);
+        }
+        .row-date { font-size: 0.77rem; color: var(--text-muted); }
+        .row-title {
+            font-size: 0.97rem; font-weight: 600; color: var(--text);
+            margin: 0 0 5px; line-height: 1.5; transition: color 0.15s;
+        }
+        .post-row:hover .row-title { color: var(--accent); }
+        .row-summary {
+            font-size: 0.83rem; color: var(--text-muted);
+            line-height: 1.6; margin: 0;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        /* PROJECTS */
+        .projects-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 14px; margin-bottom: 48px;
+        }
+        .proj-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; padding: 18px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .proj-card:hover { border-color: var(--border-hover); background: var(--bg-hover); }
+        .proj-num {
+            font-size: 0.68rem; font-weight: 700; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px;
+        }
+        .proj-name { font-size: 0.93rem; font-weight: 700; margin: 0 0 7px; }
+        .proj-desc {
+            font-size: 0.82rem; color: var(--text-muted);
+            line-height: 1.65; margin: 0 0 12px;
+        }
+        .proj-metrics { display: flex; flex-wrap: wrap; gap: 5px; }
+        .metric {
+            padding: 2px 7px; font-size: 0.7rem; font-family: monospace;
             background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
+            border: 1px solid var(--border); border-radius: 4px;
+            color: var(--text-muted);
         }
-        .blog-preview-title {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0 0 6px;
+
+        /* CONTACT */
+        .contact-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .contact-chip {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 7px 14px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; font-size: 0.83rem; color: var(--text-muted);
+            transition: all 0.15s;
         }
-        .blog-preview-post-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: rgba(255,255,255,0.85);
-            margin: 0 0 6px;
-            line-height: 1.5;
+        .contact-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 18px 24px; text-align: center;
+            font-size: 0.78rem; color: var(--text-muted);
         }
-        .blog-preview-summary {
-            font-size: 0.83rem;
-            color: rgba(255,255,255,0.45);
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin: 0 0 12px;
-        }
-        .blog-preview-date {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.3);
-        }
-        .blog-section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .view-all-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 18px;
-            background: rgba(52,152,219,0.15);
-            border: 1px solid rgba(52,152,219,0.3);
-            border-radius: 20px;
-            color: #3498db;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .view-all-btn:hover {
-            background: rgba(52,152,219,0.3);
-            color: #fff;
+
+        /* RESPONSIVE */
+        @media (max-width: 760px) {
+            .page-wrap { grid-template-columns: 1fr; gap: 32px; padding-top: 28px; }
+            .author-card {
+                position: static;
+                display: grid;
+                grid-template-columns: 68px 1fr;
+                column-gap: 16px; align-items: start;
+            }
+            .author-avatar { margin-bottom: 0; }
+            .skill-chips, .divider, .social-links, .author-bio { grid-column: 1/-1; }
+            .author-name, .author-role { margin-top: 0; }
+            .projects-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="en">
-    <nav class="top-nav">
-        <a href="index.html">首页</a>
-        <a href="blog.html" class="blog-link">&#128196; 博客</a>
-        <a href="#contact">联系我</a>
-    </nav>
-    <header class="en">
-        <div class="profile-container">
-            <img src="images/profile.png" alt="Your Profile Picture" class="profile-img">
-        </div>
-        <h1 class="lang" data-en="Macle Chen" data-zh="陈海华">Macle Chen</h1>
-        <p class="subtitle lang" data-en="iOS Developer | Reverse Engineering" data-zh="iOS开发者 | 逆向开发">[Your Skills]</p>
-        <div class="lang-switch">
-            <button onclick="switchLang('en')">English</button>
-            <button onclick="switchLang('zh')">中文</button>
-        </div>
-    </header>
+<body>
 
-    <div class="container">
-        <div class="section">
-            <h2 class="lang" data-en="About Me" data-zh="关于我">About Me</h2>
-            <p class="lang" data-en="Hello! I am Haihua, a passionate IT professional with rich experience in reverse development, Python crawler, Java front-end and back-end, Mac, iOS, Android, etc. I like to solve problems and create meaningful solutions." data-zh="你好！我是海华，一名充满激情的IT专业人士，拥有逆向开发, Python爬虫, java前后端，Mac，ios，Android等资深开发经验。我喜欢解决问题并打造有意义的解决方案。">你好！我是海华，一名充满激情的IT专业人士，拥有逆向开发, Python爬虫, java前后端，Mac，ios，Android等资深开发经验。我喜欢解决问题并打造有意义的解决方案。</p>
-        </div>
-
-        <div class="section">
-            <h2 class="lang" data-en="Projects" data-zh="项目">Projects</h2>
-
-            <!-- 项目1： -->
-            <div class="project en">
-                <img src="images/project1.jpg" alt="Project 1 Screenshot">
-                <div class="project-content">
-                    <h3 class="lang" data-en="Project 1: IdeaHub Screen Sharing" data-zh="项目1：IdeaHub屏幕共享">Project 1: IdeaHub屏幕共享</h3>
-                    <p class="lang" data-en="Background: A device that sends iPhone/iPad screen and sound content to Huawei Smart Screen for sharing, supports 30fps video and lossless PCM audio;" data-zh="背景：一款将iPhone/iPad屏幕和声音等内容发送到华为智慧屏上共享，支持30fps视频，无损PCM音频；"></p>
-                    <p class="lang" data-en="Technical solution: Use MVC design pattern, Replaykit data sharing, H264 video encoding, WebRTC audio denoising, Instruments memory optimization, App crash analysis and processing, video YUV transmission efficiency optimization, GCDSocket+memory sharing transmission CMSampleBuffer video data; audio and video data packaging and unpacking processing; YUV420 to RGB data conversion;" data-zh="技术方案：使用MVC设计模式、Replaykit数据共享、H264视频编码、WebRTC音频去噪音、Instruments内存优化、App崩溃分析处理、视频YUV传输效率优化、GCDSocket+内存共享传输CMSampleBuffer视频数据；音视频数据组包拆包处理；YUV420转RGB数据转换；"></p>
-                    <p class="lang" data-en="Effects: 1. Audio and video data can be shared synchronously; 2. Video frame rate increased from 5 frames to 30 frames; 3. CPU performance reduced from 90% to about 45%;"  data-zh="效果：1.可以音视频数据同步共享；2.视频帧率由5帧提升到30帧；3. CPU性能由90%降低到45%左右；"></p>
-                </div>
-            </div>
-
-            <!-- 项目2： -->
-            <div class="project en">
-                <img src="images/project2.jpg" alt="Project 2 Screenshot">
-                <div class="project-content">
-                    <h3 class="lang" data-en="Project 2: Conference soft terminal" data-zh="项目1：会议软终端">Project 2: 会议软终端</h3>
-                    <p class="lang" data-en="Background: A mobile conference software that can support multi-person video conferencing, one-way live conference, point-to-point audio and video calls, and corporate address book query;" data-zh="背景：一款可以多人视频会议、单向直播会议、点对点音频和视频通话、查询企业通讯录等功能的移动会议软件；"></p>
-                    <p class="lang" data-en="Technical solution: Use MVVM+business integration design pattern to build framework, FMDB+UserDefault data persistence, build user secondary reconnection mechanism, APPGroups video data sharing, data-driven interface to display various video parameters, SVC multi-person video stream display, multi-controller container binding and jump, crash framework construction and analysis; Instruments memory optimization;" data-zh="技术方案：使用MVVM+业务整合设计模式搭建框架、FMDB+UserDefault数据持久化、用户二次重连机制搭建、APPGroups视频数据共享、数据驱动界面展示各种视频参数、SVC多人视频流展示、多控制器容器绑定及跳转, 崩溃框架搭建及分析；Instruments内存优化；
-                    "></p>
-                    <p class="lang" data-en="Effects: 1. Multi-person audio and video conferencing; 2. Crash rate reduced from 20% to <1%; 3. Memory reduced from about 300M to about 200M;"  data-zh="效果：1.多人音视频开会；2.崩溃率由20%降低到<1%;3.内存有300M左右降低到200M左右；
-                    "></p>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="section">
-            <h2 class="lang" data-en="Skills" data-zh="技能">Skills</h2>
-            <ul>
-                <li class="lang" data-en="Skill 1: Reverse development of Tiktok, Bitpie, Trust, MetaMask and other applications" data-zh="技能1:逆向开发Tiktok, Bitpie, Trust, MetaMask等各类应用">技能1:逆向开发Tiktok, Bitpie, Trust, MetaMask等各类应用</li>
-                <li class="lang" data-en="Skill 2: iOS audio and video compression, noise removal, encoding, transmission and other processing" data-zh="技能2：iOS音视频压缩、去噪音、编码、传输等处理">技能2：iOS音视频压缩、去噪音、编码、传输等处理</li>
-                <li class="lang" data-en="Skill 3: iOS/Android reverse engineering development, Android version iCloud data backup, Mac version Logo generator, Flutter mobile notes, Vue version Web notes, Java backend development, Python crawler/personal blog, WeChat applet voting software development, etc." data-zh="技能3：iOS/Android逆向工程开发、Android版iCloud数据备份、Mac版Logo生成器、Flutter移动笔记、Vue版Web笔记、Java后端开发、Python爬虫/个人博客、微信小程序投票软件等开发">技能3：iOS/Android逆向工程开发、Android版iCloud数据备份、Mac版Logo生成器、Flutter移动笔记、Vue版Web笔记、Java后端开发、Python爬虫/个人博客、微信小程序投票软件等开发</li>
-            </ul>
-        </div>
-
-        <div class="section" id="blog-section">
-            <div class="blog-section-header">
-                <h2 class="lang" data-en="Latest Blog Posts" data-zh="最新博文" style="margin:0">Latest Blog Posts</h2>
-                <a href="blog.html" class="view-all-btn">查看全部 →</a>
-            </div>
-            <div id="blog-preview-list"></div>
-        </div>
-
-        <div class="section" id="contact">
-            <h2 class="lang" data-en="Contact" data-zh="联系方式">Contact</h2>
-            <p>Email: <a href="mailto:foverleee@gmail.com">foverleee@gmail.com</a></p>
-            <p data-en="Telegram: " data-zh="飞机: ">Telegram: <a href="https://web.telegram.org/k/" target="_blank">@ChenSirLite</a></p>
-            <p data-en="GitHub: " data-zh="GitHub: ">GitHub: <a href="https://github.com/MacleChen" target="_blank">MacleChen</a></p>
-        </div>
+<nav class="nav">
+    <div class="nav-logo">Macle<em>.</em>dev</div>
+    <div class="nav-links">
+        <a href="index.html" class="active" data-zh="首页" data-en="Home">首页</a>
+        <a href="blog.html" data-zh="博客" data-en="Blog">博客</a>
+        <a href="#contact" data-zh="联系" data-en="Contact">联系</a>
     </div>
+    <div class="lang-toggle">
+        <button id="btn-zh" onclick="setLang('zh')" class="active">中</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+</nav>
 
-    <footer class="en">
-        <p class="lang" data-en="© 2025 Macle. All rights reserved." data-zh="© 2025 海华。保留所有权利。">© 2025 [Your Name]. All rights reserved.</p>
-    </footer>
+<div class="page-wrap">
 
-    <script src="js/posts.js"></script>
-    <script>
-        function switchLang(lang) {
-            document.querySelectorAll('.lang').forEach(element => {
-                element.textContent = element.getAttribute(`data-${lang}`);
-            });
-            document.body.className = lang;
-            document.querySelector('header').className = lang;
-            document.querySelector('footer').className = lang;
-            document.querySelectorAll('.project').forEach(project => {
-                project.className = `project ${lang}`;
-            });
-        }
-        // Default to English
-        switchLang('en');
+    <!-- Author Sidebar -->
+    <aside class="author-card">
+        <img src="images/profile.png" alt="Macle Chen" class="author-avatar"
+             onerror="this.style.opacity='0.25'">
+        <div class="author-name">Macle Chen</div>
+        <div class="author-role" data-zh="iOS 开发者 · 逆向工程师" data-en="iOS Developer · Reverse Engineer">iOS 开发者 · 逆向工程师</div>
+        <p class="author-bio"
+           data-zh="专注 iOS 音视频开发与逆向工程，熟悉 H264 编码、WebRTC 降噪、MVVM 架构与崩溃治理，有 TikTok、Bitpie 等应用逆向实战经验。"
+           data-en="Focused on iOS audio/video and reverse engineering. Proficient in H264 encoding, WebRTC, MVVM, and crash governance. Hands-on experience reversing TikTok, Bitpie, and more.">
+            专注 iOS 音视频开发与逆向工程，熟悉 H264 编码、WebRTC 降噪、MVVM 架构与崩溃治理，有 TikTok、Bitpie 等应用逆向实战经验。
+        </p>
+        <div class="skill-chips">
+            <span class="chip">iOS</span><span class="chip">Obj-C</span>
+            <span class="chip">Swift</span><span class="chip">Frida</span>
+            <span class="chip">H264</span><span class="chip">WebRTC</span>
+            <span class="chip">MVVM</span><span class="chip">Python</span>
+            <span class="chip">Android</span><span class="chip">Java</span>
+        </div>
+        <hr class="divider">
+        <div class="social-links">
+            <a href="https://github.com/MacleChen" target="_blank" class="social-link">
+                <span class="social-icon">⌂</span> MacleChen
+            </a>
+            <a href="mailto:foverleee@gmail.com" class="social-link">
+                <span class="social-icon">✉</span> foverleee@gmail.com
+            </a>
+            <a href="https://web.telegram.org/k/" target="_blank" class="social-link">
+                <span class="social-icon">✈</span> @ChenSirLite
+            </a>
+        </div>
+    </aside>
 
-        // Render latest blog posts preview
-        function renderBlogPreview() {
-            const container = document.getElementById('blog-preview-list');
-            if (!container || typeof POSTS === 'undefined') return;
-            const latest = POSTS.slice(0, 3);
-            container.innerHTML = latest.map(p => {
-                const d = new Date(p.date);
-                const dateStr = d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate();
-                return `<a href="post.html?id=${p.id}" class="blog-preview" style="display:block;text-decoration:none;">
-                    <div class="blog-preview-title">${p.category} &middot; ${dateStr}</div>
-                    <div class="blog-preview-post-title">${p.title}</div>
-                    <div class="blog-preview-summary">${p.summary}</div>
-                </a>`;
-            }).join('');
-        }
-        renderBlogPreview();
-    </script>
+    <!-- Main Content -->
+    <main class="main-col">
+
+        <!-- Latest Posts -->
+        <div class="sec-hd">
+            <h2 class="sec-label" data-zh="最新文章" data-en="Latest Posts">最新文章</h2>
+            <a href="blog.html" class="sec-more">
+                <span data-zh="全部文章" data-en="All Posts">全部文章</span> →
+            </a>
+        </div>
+        <div class="post-list" id="postList"></div>
+
+        <!-- Projects -->
+        <div class="sec-hd">
+            <h2 class="sec-label" data-zh="项目经历" data-en="Projects">项目经历</h2>
+        </div>
+        <div class="projects-grid">
+            <div class="proj-card">
+                <div class="proj-num" data-zh="项目 01" data-en="Project 01">项目 01</div>
+                <div class="proj-name" data-zh="IdeaHub 屏幕共享" data-en="IdeaHub Screen Sharing">IdeaHub 屏幕共享</div>
+                <p class="proj-desc"
+                   data-zh="将 iPhone/iPad 屏幕与音频实时传输至华为智慧屏，VideoToolbox H264 硬编码 + GCDSocket 内存共享零拷贝传输。"
+                   data-en="Real-time transmission of iPhone/iPad screen & audio to Huawei Smart Screen via VideoToolbox H264 encoding and zero-copy GCDSocket transfer.">
+                    将 iPhone/iPad 屏幕与音频实时传输至华为智慧屏，VideoToolbox H264 硬编码 + GCDSocket 内存共享零拷贝传输。
+                </p>
+                <div class="proj-metrics">
+                    <span class="metric">5fps → 30fps</span>
+                    <span class="metric">CPU 90%→45%</span>
+                    <span class="metric">ReplayKit</span>
+                    <span class="metric">WebRTC</span>
+                </div>
+            </div>
+            <div class="proj-card">
+                <div class="proj-num" data-zh="项目 02" data-en="Project 02">项目 02</div>
+                <div class="proj-name" data-zh="移动会议软终端" data-en="Mobile Conference App">移动会议软终端</div>
+                <p class="proj-desc"
+                   data-zh="支持多人视频会议、单向直播、P2P 通话的企业移动应用，MVVM + 自建崩溃框架，崩溃率从 20% 降至 1% 以下。"
+                   data-en="Enterprise mobile app with multi-party conferencing, live streaming, and P2P calls. MVVM + custom crash framework reduced crash rate from 20% to under 1%.">
+                    支持多人视频会议、单向直播、P2P 通话的企业移动应用，MVVM + 自建崩溃框架，崩溃率从 20% 降至 1% 以下。
+                </p>
+                <div class="proj-metrics">
+                    <span class="metric">崩溃率 20%→&lt;1%</span>
+                    <span class="metric">内存 300M→200M</span>
+                    <span class="metric">FMDB</span>
+                    <span class="metric">SVC</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="sec-hd" id="contact">
+            <h2 class="sec-label" data-zh="联系方式" data-en="Contact">联系方式</h2>
+        </div>
+        <div class="contact-row">
+            <a href="mailto:foverleee@gmail.com" class="contact-chip">✉ foverleee@gmail.com</a>
+            <a href="https://web.telegram.org/k/" target="_blank" class="contact-chip">✈ @ChenSirLite</a>
+            <a href="https://github.com/MacleChen" target="_blank" class="contact-chip">⌂ github.com/MacleChen</a>
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <p data-zh="© 2025 Macle Chen &nbsp;·&nbsp; 用心分享技术" data-en="© 2025 Macle Chen &nbsp;·&nbsp; Sharing tech with passion">© 2025 Macle Chen &nbsp;·&nbsp; 用心分享技术</p>
+</footer>
+
+<script src="js/posts.js"></script>
+<script>
+    const LANG_KEY = 'macle_lang';
+    let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem(LANG_KEY, lang);
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        document.querySelectorAll('[data-zh]').forEach(el => {
+            const val = el.getAttribute('data-' + lang);
+            if (val) el.textContent = val;
+        });
+        document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        renderPosts();
+    }
+
+    function fmtDate(str) {
+        const d = new Date(str);
+        return currentLang === 'en'
+            ? d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+            : d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate();
+    }
+
+    function renderPosts() {
+        const el = document.getElementById('postList');
+        if (!el || typeof POSTS === 'undefined') return;
+        el.innerHTML = POSTS.slice(0, 5).map(p => `
+            <a class="post-row" href="post.html?id=${p.id}">
+                <div class="row-meta">
+                    <span class="row-cat">${currentLang === 'en' ? (p.categoryEn || p.category) : p.category}</span>
+                    <span class="row-date">${fmtDate(p.date)}</span>
+                </div>
+                <div class="row-title">${currentLang === 'en' ? (p.titleEn || p.title) : p.title}</div>
+                <p class="row-summary">${currentLang === 'en' ? (p.summaryEn || p.summary) : p.summary}</p>
+            </a>`).join('');
+    }
+
+    setLang(currentLang);
+</script>
 </body>
 </html>

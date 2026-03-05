@@ -8,10 +8,13 @@ const POSTS = [
   {
     id: "ios-avfoundation-guide",
     title: "iOS音视频开发实战：H264编码与传输优化",
+    titleEn: "iOS Audio/Video Deep Dive: H264 Encoding & Zero-Copy Transmission",
     date: "2025-03-01",
     category: "iOS开发",
+    categoryEn: "iOS Dev",
     tags: ["iOS", "AVFoundation", "H264", "VideoToolbox"],
     summary: "详解iOS音视频开发核心技术：从ReplayKit捕获屏幕数据，到VideoToolbox H264硬编码，再到YUV格式优化与GCDSocket零拷贝传输，分享将视频帧率从5fps提升至30fps、CPU从90%降至45%的完整实战经验。",
+    summaryEn: "A complete walkthrough of iOS audio/video fundamentals: screen capture with ReplayKit, hardware H264 encoding via VideoToolbox, YUV optimization, and zero-copy GCDSocket transfer — lifting frame rate from 5fps to 30fps while cutting CPU from 90% to 45%.",
     cover: "images/project1.jpg",
     content: `# iOS音视频开发实战：H264编码与传输优化
 
@@ -143,10 +146,13 @@ RTCAudioSession *audioSession = [RTCAudioSession sharedInstance];
   {
     id: "ios-reverse-engineering-frida",
     title: "iOS逆向工程实战：Frida动态插桩从入门到实战",
+    titleEn: "iOS Reverse Engineering: Frida Dynamic Instrumentation in Practice",
     date: "2025-02-10",
     category: "逆向开发",
+    categoryEn: "Reverse Eng.",
     tags: ["iOS", "逆向工程", "Frida", "动态分析"],
     summary: "Frida是iOS逆向工程中最强大的动态插桩工具之一。本文从环境搭建开始，介绍如何Hook OC方法、拦截网络请求、绕过越狱检测，以及配合Hopper进行静态+动态联合分析的实战经验。",
+    summaryEn: "Frida is one of the most powerful dynamic instrumentation tools for iOS RE. This post covers environment setup, hooking Objective-C methods, intercepting network requests, bypassing jailbreak detection, and combining with Hopper for static+dynamic analysis.",
     cover: "images/project2.jpg",
     content: `# iOS逆向工程实战：Frida动态插桩从入门到实战
 
@@ -298,10 +304,13 @@ Frida是逆向工程师的瑞士军刀。配合Hopper静态分析，可以高效
   {
     id: "mvvm-conference-app",
     title: "MVVM实战：会议软终端崩溃率从20%降至1%的完整过程",
+    titleEn: "MVVM in Production: Reducing Conference App Crash Rate from 20% to Under 1%",
     date: "2025-01-20",
     category: "iOS开发",
+    categoryEn: "iOS Dev",
     tags: ["iOS", "MVVM", "架构设计", "崩溃优化", "FMDB"],
     summary: "在移动会议软终端开发中，采用MVVM+业务整合架构，通过自建崩溃捕获框架、Method Swizzling防崩溃保护、FMDB数据持久化以及Instruments内存优化，将崩溃率从20%降至1%以下，内存从300M降至200M。",
+    summaryEn: "How we rebuilt a mobile conferencing app with MVVM + business adapter architecture, built a custom crash capture framework, applied Method Swizzling guards, and used Instruments to drive crash rate from 20% to under 1% and memory from 300M to 200M.",
     cover: "images/project2.jpg",
     content: `# MVVM实战：会议软终端崩溃率从20%降至1%的完整过程
 

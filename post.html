@@ -15,56 +15,54 @@
         *, *::before, *::after { box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            background-attachment: fixed;
-            color: #e8e8f0;
+            font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0; padding: 0;
+            background: #0d1117;
+            color: #e6edf3;
             min-height: 100vh;
         }
 
         /* ---- Navigation ---- */
         .nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(15, 12, 41, 0.88);
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(13,17,23,0.96);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
+            padding: 0 28px;
+            display: flex; align-items: center; gap: 8px;
+            height: 54px;
         }
         .nav-logo {
-            font-size: 1.2rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, #3498db, #8e44ad);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
+            font-size: 0.98rem; font-weight: 700;
+            color: #e6edf3; text-decoration: none; margin-right: auto;
         }
-        .nav-links { display: flex; gap: 8px; }
+        .nav-logo em { color: #4a9eff; font-style: normal; }
+        .nav-links { display: flex; gap: 2px; }
         .nav-links a {
-            color: rgba(255,255,255,0.75);
-            text-decoration: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            color: #8b949e; text-decoration: none;
+            padding: 5px 11px; border-radius: 6px;
+            font-size: 0.875rem; transition: all 0.15s;
         }
-        .nav-links a:hover {
-            background: rgba(52,152,219,0.2);
-            color: #3498db;
+        .nav-links a:hover { color: #e6edf3; background: rgba(255,255,255,0.05); }
+        .lang-toggle {
+            display: flex; overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;
         }
+        .lang-toggle button {
+            background: transparent; border: none;
+            color: #8b949e; padding: 3px 10px;
+            font-size: 0.78rem; cursor: pointer; transition: all 0.15s;
+            font-family: inherit;
+        }
+        .lang-toggle button.active { background: #4a9eff; color: #fff; }
+        .lang-toggle button:hover:not(.active) { color: #e6edf3; }
 
         /* ---- Layout ---- */
         .page-layout {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 40px 20px 100px;
+            padding: 36px 20px 100px;
             display: grid;
             grid-template-columns: 1fr 260px;
             gap: 40px;
@@ -73,7 +71,7 @@
 
         /* ---- Post Article ---- */
         .post-article {
-            background: rgba(255,255,255,0.04);
+            background: #161b22;
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 20px;
             overflow: hidden;
@@ -267,7 +265,7 @@
         /* ---- Sidebar ---- */
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
         .sidebar-card {
-            background: rgba(255,255,255,0.04);
+            background: #161b22;
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 16px;
             padding: 20px;
@@ -511,11 +509,15 @@
 <body>
 
 <nav class="nav">
-    <a href="index.html" class="nav-logo">Macle Chen</a>
+    <a href="index.html" class="nav-logo">Macle<em>.</em>dev</a>
     <div class="nav-links">
-        <a href="index.html">首页</a>
-        <a href="blog.html">博客</a>
-        <a href="index.html#contact">联系我</a>
+        <a href="index.html" data-zh="首页" data-en="Home">首页</a>
+        <a href="blog.html" data-zh="博客" data-en="Blog">博客</a>
+        <a href="index.html#contact" data-zh="联系" data-en="Contact">联系</a>
+    </div>
+    <div class="lang-toggle">
+        <button id="btn-zh" onclick="setLang('zh')" class="active">中</button>
+        <button id="btn-en" onclick="setLang('en')">EN</button>
     </div>
 </nav>
 
@@ -571,6 +573,30 @@
 
 <script src="js/posts.js"></script>
 <script>
+    // ---- Language ----
+    const LANG_KEY = 'macle_lang';
+    let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem(LANG_KEY, lang);
+        document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+        document.querySelectorAll('[data-zh]').forEach(el => {
+            const val = el.getAttribute('data-' + lang);
+            if (val) el.textContent = val;
+        });
+        document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    }
+
+    // Apply saved lang to nav immediately
+    (function() {
+        if (currentLang === 'en') {
+            document.getElementById('btn-zh').classList.remove('active');
+            document.getElementById('btn-en').classList.add('active');
+        }
+    })();
+
     // ---- Donate Modal ----
     function openDonate() {
         document.getElementById('donateModal').classList.add('open');
