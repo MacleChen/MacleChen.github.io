@@ -241,6 +241,7 @@
     }
 
     function estRead(content) {
+        if (!content) return '';
         const words = content.replace(/```[\s\S]*?```/g, '').replace(/[#*`>\[\]]/g, '').length;
         const mins = Math.max(1, Math.round(words / 300));
         return currentLang === 'en' ? mins + ' min read' : mins + ' 分钟阅读';
@@ -293,7 +294,6 @@
                     <div class="row-meta">
                         <span class="row-cat">${cat}</span>
                         <span class="row-date">${fmtDate(p.date)}</span>
-                        <span class="row-readtime">${estRead(p.content)}</span>
                     </div>
                     <div class="row-title">${title}</div>
                     <p class="row-summary">${summary}</p>
