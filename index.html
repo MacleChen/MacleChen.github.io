@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - IT Portfolio</title>
+    <title>Macle Chen - iOS Developer</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -49,7 +49,7 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 40px 20px 20px;
         }
         .section {
             margin-bottom: 60px;
@@ -108,11 +108,11 @@
         footer {
             text-align: center;
             padding: 20px;
-            position: fixed;
-            bottom: 0;
+            position: relative;
             width: 100%;
             box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
             transition: background 0.5s ease;
+            margin-top: 20px;
         }
         .lang-switch {
             position: absolute;
@@ -188,9 +188,109 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* ---- Top Nav ---- */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 12, 41, 0.88);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            height: 54px;
+            gap: 4px;
+        }
+        .top-nav a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+        .top-nav a:hover {
+            background: rgba(52,152,219,0.2);
+            color: #3498db;
+        }
+        .top-nav a.blog-link {
+            background: rgba(52,152,219,0.15);
+            color: #3498db;
+            border: 1px solid rgba(52,152,219,0.3);
+        }
+        .top-nav a.blog-link:hover {
+            background: rgba(52,152,219,0.3);
+        }
+        /* ---- Blog Preview Section ---- */
+        .blog-preview {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .blog-preview-title {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 6px;
+        }
+        .blog-preview-post-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
+            margin: 0 0 6px;
+            line-height: 1.5;
+        }
+        .blog-preview-summary {
+            font-size: 0.83rem;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin: 0 0 12px;
+        }
+        .blog-preview-date {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+        }
+        .blog-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .view-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            background: rgba(52,152,219,0.15);
+            border: 1px solid rgba(52,152,219,0.3);
+            border-radius: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .view-all-btn:hover {
+            background: rgba(52,152,219,0.3);
+            color: #fff;
+        }
     </style>
 </head>
 <body class="en">
+    <nav class="top-nav">
+        <a href="index.html">首页</a>
+        <a href="blog.html" class="blog-link">&#128196; 博客</a>
+        <a href="#contact">联系我</a>
+    </nav>
     <header class="en">
         <div class="profile-container">
             <img src="images/profile.png" alt="Your Profile Picture" class="profile-img">
@@ -247,7 +347,15 @@
             </ul>
         </div>
 
-        <div class="section">
+        <div class="section" id="blog-section">
+            <div class="blog-section-header">
+                <h2 class="lang" data-en="Latest Blog Posts" data-zh="最新博文" style="margin:0">Latest Blog Posts</h2>
+                <a href="blog.html" class="view-all-btn">查看全部 →</a>
+            </div>
+            <div id="blog-preview-list"></div>
+        </div>
+
+        <div class="section" id="contact">
             <h2 class="lang" data-en="Contact" data-zh="联系方式">Contact</h2>
             <p>Email: <a href="mailto:foverleee@gmail.com">foverleee@gmail.com</a></p>
             <p data-en="Telegram: " data-zh="飞机: ">Telegram: <a href="https://web.telegram.org/k/" target="_blank">@ChenSirLite</a></p>
@@ -259,13 +367,12 @@
         <p class="lang" data-en="© 2025 Macle. All rights reserved." data-zh="© 2025 海华。保留所有权利。">© 2025 [Your Name]. All rights reserved.</p>
     </footer>
 
+    <script src="js/posts.js"></script>
     <script>
         function switchLang(lang) {
-            // Switch text content
             document.querySelectorAll('.lang').forEach(element => {
                 element.textContent = element.getAttribute(`data-${lang}`);
             });
-            // Switch theme
             document.body.className = lang;
             document.querySelector('header').className = lang;
             document.querySelector('footer').className = lang;
@@ -275,6 +382,23 @@
         }
         // Default to English
         switchLang('en');
+
+        // Render latest blog posts preview
+        function renderBlogPreview() {
+            const container = document.getElementById('blog-preview-list');
+            if (!container || typeof POSTS === 'undefined') return;
+            const latest = POSTS.slice(0, 3);
+            container.innerHTML = latest.map(p => {
+                const d = new Date(p.date);
+                const dateStr = d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate();
+                return `<a href="post.html?id=${p.id}" class="blog-preview" style="display:block;text-decoration:none;">
+                    <div class="blog-preview-title">${p.category} &middot; ${dateStr}</div>
+                    <div class="blog-preview-post-title">${p.title}</div>
+                    <div class="blog-preview-summary">${p.summary}</div>
+                </a>`;
+            }).join('');
+        }
+        renderBlogPreview();
     </script>
 </body>
 </html>
