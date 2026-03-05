@@ -75,6 +75,7 @@
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 20px;
             overflow: hidden;
+            min-width: 0; /* prevent grid item from overflowing */
         }
         .post-cover {
             width: 100%;
@@ -126,6 +127,8 @@
             line-height: 1.85;
             font-size: 1rem;
             color: rgba(255,255,255,0.85);
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
         .post-content h1, .post-content h2, .post-content h3 {
             color: #fff;
@@ -174,10 +177,15 @@
             border-radius: 0 8px 8px 0;
             color: rgba(255,255,255,0.7);
         }
+        .post-content .table-wrap {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
         .post-content table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 0;
             font-size: 0.9rem;
         }
         .post-content th {
@@ -813,6 +821,14 @@
                 </div>
             </aside>
         </div>`;
+
+        // Wrap tables for horizontal scroll
+        document.querySelectorAll('#postContent table').forEach(t => {
+            const wrap = document.createElement('div');
+            wrap.className = 'table-wrap';
+            t.parentNode.insertBefore(wrap, t);
+            wrap.appendChild(t);
+        });
 
         // Smooth scroll for TOC
         document.querySelectorAll('.toc-list a').forEach(a => {
