@@ -155,6 +155,35 @@
             color: var(--text-muted); font-size: 0.9rem;
         }
 
+        /* PAGINATION */
+        .pagination {
+            display: flex; align-items: center; justify-content: center;
+            gap: 4px; margin-top: 32px; padding-top: 28px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .pg-btn {
+            min-width: 36px; height: 36px; padding: 0 10px;
+            border-radius: 8px; border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            font-size: 0.875rem; cursor: pointer; transition: all 0.15s;
+            font-family: inherit; display: inline-flex;
+            align-items: center; justify-content: center;
+        }
+        .pg-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+        .pg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+        .pg-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .pg-ellipsis { color: var(--text-muted); padding: 0 2px; line-height: 36px; font-size: 0.9rem; }
+        .pg-info { font-size: 0.78rem; color: var(--text-muted); margin-left: 8px; }
+
+        /* CAT COUNT */
+        .cat-count {
+            display: inline-block; font-size: 0.68rem;
+            background: rgba(255,255,255,0.1); border-radius: 10px;
+            padding: 0 5px; margin-left: 3px; vertical-align: middle;
+        }
+        .cat-btn.active .cat-count { background: rgba(255,255,255,0.25); }
+
         /* FOOTER */
         footer {
             border-top: 1px solid var(--border);
@@ -197,7 +226,7 @@
             <span class="search-ico">⌕</span>
             <input type="text" id="searchInput"
                    placeholder="搜索文章..." data-placeholder-zh="搜索文章..." data-placeholder-en="Search posts..."
-                   oninput="renderPosts()">
+                   oninput="currentPage=1; renderPosts()">
         </div>
         <div class="cats" id="cats"></div>
     </div>
@@ -214,6 +243,8 @@
     const LANG_KEY = 'macle_lang';
     let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
     let activeCategory = 'all';
+    let currentPage = 1;
+    const PAGE_SIZE = 20;
 
     function setLang(lang) {
         currentLang = lang;
@@ -250,15 +281,21 @@
     function buildCats() {
         const allLabel = currentLang === 'en' ? 'All' : '全部';
         const cats = ['all', ...new Set(POSTS.map(p => p.category))];
-        document.getElementById('cats').innerHTML = cats.map(c => `
-            <button class="cat-btn ${c === activeCategory ? 'active' : ''}"
+        const counts = {};
+        POSTS.forEach(p => { counts[p.category] = (counts[p.category] || 0) + 1; });
+        document.getElementById('cats').innerHTML = cats.map(c => {
+            const label = c === 'all' ? allLabel : (currentLang === 'en' ? (POSTS.find(p => p.category === c)?.categoryEn || c) : c);
+            const count = c === 'all' ? POSTS.length : (counts[c] || 0);
+            return `<button class="cat-btn ${c === activeCategory ? 'active' : ''}"
                     onclick="setCategory('${c}')" data-cat="${c}">
-                ${c === 'all' ? allLabel : (currentLang === 'en' ? (POSTS.find(p => p.category === c)?.categoryEn || c) : c)}
-            </button>`).join('');
+                ${label}<span class="cat-count">${count}</span>
+            </button>`;
+        }).join('');
     }
 
     function setCategory(cat) {
         activeCategory = cat;
+        currentPage = 1;
         buildCats();
         renderPosts();
     }
@@ -274,17 +311,25 @@
             return matchCat && matchQ;
         });
 
+        const total = filtered.length;
+        const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+        if (currentPage > totalPages) currentPage = totalPages;
+
         const statsEl = document.getElementById('statsBar');
         statsEl.textContent = currentLang === 'en'
-            ? filtered.length + ' post' + (filtered.length !== 1 ? 's' : '')
-            : filtered.length + ' 篇文章';
+            ? total + ' post' + (total !== 1 ? 's' : '')
+            : total + ' 篇文章';
 
         const list = document.getElementById('postList');
-        if (!filtered.length) {
+        if (!total) {
             list.innerHTML = `<div class="empty">${currentLang === 'en' ? 'No posts found.' : '没有找到相关文章。'}</div>`;
             return;
         }
-        list.innerHTML = filtered.map(p => {
+
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const pagePosts = filtered.slice(start, start + PAGE_SIZE);
+
+        list.innerHTML = pagePosts.map(p => {
             const title = currentLang === 'en' ? (p.titleEn || p.title) : p.title;
             const summary = currentLang === 'en' ? (p.summaryEn || p.summary) : p.summary;
             const cat = currentLang === 'en' ? (p.categoryEn || p.category) : p.category;
@@ -304,6 +349,41 @@
                 <span class="post-row-arrow">→</span>
             </a>`;
         }).join('');
+
+        if (totalPages > 1) renderPagination(totalPages, total);
+    }
+
+    function renderPagination(totalPages, total) {
+        const pages = [];
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                pages.push(i);
+            } else if (pages[pages.length - 1] !== '…') {
+                pages.push('…');
+            }
+        }
+        const pageInfo = currentLang === 'en'
+            ? `Page ${currentPage} / ${totalPages}`
+            : `第 ${currentPage} / ${totalPages} 页`;
+        const prevLabel = '‹';
+        const nextLabel = '›';
+
+        const html = `<div class="pagination">
+            <button class="pg-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>${prevLabel}</button>
+            ${pages.map(p => p === '…'
+                ? `<span class="pg-ellipsis">…</span>`
+                : `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`
+            ).join('')}
+            <button class="pg-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>${nextLabel}</button>
+            <span class="pg-info">${pageInfo}</span>
+        </div>`;
+        document.getElementById('postList').insertAdjacentHTML('beforeend', html);
+    }
+
+    function goToPage(page) {
+        currentPage = page;
+        renderPosts();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     setLang(currentLang);
