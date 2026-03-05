@@ -649,8 +649,19 @@
         return d.getFullYear() + ' 年 ' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日';
     }
 
-    // ---- Render Post ----
-    function renderPost() {
+    // ---- Configure marked ----
+    marked.setOptions({
+        highlight: function(code, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                return hljs.highlight(code, { language: lang }).value;
+            }
+            return hljs.highlightAuto(code).value;
+        },
+        breaks: true, gfm: true
+    });
+
+    // ---- Render Post (async: loads content from posts/{id}.md) ----
+    async function renderPost() {
         const params = new URLSearchParams(location.search);
         const id = params.get('id');
         const post = POSTS.find(p => p.id === id);
@@ -666,35 +677,64 @@
 
         document.title = post.title + ' - Macle Chen';
 
-        // Configure marked
-        marked.setOptions({
-            highlight: function(code, lang) {
-                if (lang && hljs.getLanguage(lang)) {
-                    return hljs.highlight(code, { language: lang }).value;
-                }
-                return hljs.highlightAuto(code).value;
-            },
-            breaks: true,
-            gfm: true
-        });
+        // Show loading skeleton first
+        app.innerHTML = `<div class="page-layout">
+            <main><article class="post-article">
+                <div class="post-header">
+                    <div class="post-meta-top">
+                        <span class="post-category">${post.category}</span>
+                        <span class="post-date">${formatDate(post.date)}</span>
+                    </div>
+                    <h1 class="post-title">${post.title}</h1>
+                    <div class="post-tags">
+                        ${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="post-content" id="postContent" style="min-height:200px">
+                    <p style="color:#8b949e;text-align:center;padding:40px 0">加载中…</p>
+                </div>
+            </article></main>
+            <aside class="sidebar"></aside>
+        </div>`;
 
-        const contentHtml = marked.parse(post.content);
+        // Load markdown content: inline (legacy) or from posts/{id}.md
+        let mdText = post.content || '';
+        if (!mdText) {
+            try {
+                const resp = await fetch('./posts/' + post.id + '.md');
+                if (resp.ok) {
+                    mdText = await resp.text();
+                } else {
+                    mdText = post.csdn_url
+                        ? `> 正文加载失败。[前往 CSDN 原文](${post.csdn_url})`
+                        : '> 正文加载失败。';
+                }
+            } catch(e) {
+                mdText = '> 网络错误，正文加载失败。';
+            }
+        }
+
+        const contentHtml = marked.parse(mdText);
 
         // Extract headings for TOC
         const headings = [];
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = contentHtml;
         tempDiv.querySelectorAll('h2, h3').forEach((el, i) => {
-            const id = 'heading-' + i;
-            el.id = id;
-            headings.push({ id, text: el.textContent, level: parseInt(el.tagName[1]) });
+            const hid = 'heading-' + i;
+            el.id = hid;
+            headings.push({ id: hid, text: el.textContent, level: parseInt(el.tagName[1]) });
         });
 
         // Related posts
         const related = POSTS
             .filter(p => p.id !== post.id &&
                 (p.category === post.category || p.tags.some(t => post.tags.includes(t))))
-            .slice(0, 4);
+            .slice(0, 5);
+
+        const csdnLink = post.csdn_url
+            ? `<a href="${post.csdn_url}" target="_blank" class="share-btn">原文 CSDN</a>`
+            : '';
 
         app.innerHTML = `
         <div class="page-layout">
@@ -719,22 +759,13 @@
                         <div class="share-btns">
                             <button class="share-btn" onclick="copyLink()">&#128279; 复制链接</button>
                             <button class="share-btn" onclick="shareToTelegram('${post.title.replace(/'/g, "\\'")}')">&#128240; Telegram</button>
+                            ${csdnLink}
                         </div>
                         <button class="donate-btn-inline" onclick="openDonate()">&#9749; 打赏支持</button>
                     </div>
                     <div class="comments-section">
                         <div class="comments-title">&#128172; 评论区</div>
-                        <!-- =====================================================
-                             Giscus 评论系统配置
-                             使用步骤：
-                             1. 在你的 GitHub 仓库中启用 Discussions 功能
-                             2. 访问 https://giscus.app/ 选择你的仓库
-                             3. 将下方 data-repo-id 和 data-category-id 替换为你的真实值
-                             ===================================================== -->
-                        <div class="giscus-notice" id="giscusNotice">
-                            评论功能由 <a href="https://giscus.app" target="_blank">Giscus</a> 提供，需要 GitHub 账号登录。
-                            <br>仓库管理员：请在 <a href="https://giscus.app" target="_blank">giscus.app</a> 获取配置参数后更新 post.html。
-                        </div>
+                        <div class="giscus-notice" id="giscusNotice"></div>
                         <script src="https://giscus.app/client.js"
                             data-repo="MacleChen/MacleChen.github.io"
                             data-repo-id="R_kgDOLVPSkA"
@@ -773,10 +804,10 @@
 
                 <div class="sidebar-card">
                     <div class="sidebar-title">关于作者</div>
-                    <p style="font-size:0.875rem;color:rgba(255,255,255,0.55);line-height:1.7;margin:0 0 12px">
+                    <p style="font-size:0.875rem;color:#8b949e;line-height:1.7;margin:0 0 12px">
                         iOS开发者，专注逆向工程、音视频处理。
                     </p>
-                    <a href="index.html" style="color:#3498db;font-size:0.85rem;text-decoration:none">
+                    <a href="index.html" style="color:#4a9eff;font-size:0.85rem;text-decoration:none">
                         查看完整介绍 →
                     </a>
                 </div>
