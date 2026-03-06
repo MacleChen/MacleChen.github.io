@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="js/posts.js"></script>
     <style>
         :root {
             --bg:       #0d1117;
@@ -300,11 +301,16 @@ const REPO      = 'MacleChen/MacleChen.github.io';
 const DRAFT_KEY = 'macle_draft';
 const TOKEN_KEY = 'macle_token';
 
+// Edit mode state
+const urlParams  = new URLSearchParams(location.search);
+const editId     = urlParams.get('id');
+const isEditMode = !!editId;
+let   editPost   = null;
+
 // ── Utils ─────────────────────────────────────────────────────────
 function strToB64(str) {
     const bytes = new TextEncoder().encode(str);
-    let bin = '';
-    bytes.forEach(b => bin += String.fromCharCode(b));
+    let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
     return btoa(bin);
 }
 function b64ToStr(b64) {
@@ -316,15 +322,60 @@ function b64ToStr(b64) {
 function jsStr(s) {
     return s.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
 }
+function buildEntry(post) {
+    return `  {\n    id: ${JSON.stringify(post.id)},\n    title: \`${jsStr(post.title)}\`,\n    date: ${JSON.stringify(post.date)},\n    category: ${JSON.stringify(post.category)},\n    tags: ${JSON.stringify(post.tags)},\n    summary: \`${jsStr(post.summary)}\`,\n    cover: "",\n    csdn_url: ${JSON.stringify(post.csdn_url || '')},\n  },`;
+}
+// Replace an existing entry in posts.js by id (line-based, handles template literals safely)
+function replaceEntryInJs(content, id, newEntry) {
+    const lines   = content.split('\n');
+    const target  = `    id: ${JSON.stringify(id)},`;
+    const idLine  = lines.findIndex(l => l === target);
+    if (idLine === -1) throw new Error(`posts.js 中找不到 id=${id}`);
+    const startLine = idLine - 1; // '  {'
+    let endLine = idLine + 1;
+    while (endLine < lines.length && lines[endLine].trimEnd() !== '  },') endLine++;
+    lines.splice(startLine, endLine - startLine + 1, ...newEntry.split('\n'));
+    return lines.join('\n');
+}
 
 // ── Init ──────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-    // restore token
+window.addEventListener('DOMContentLoaded', async () => {
     const tok = localStorage.getItem(TOKEN_KEY) || '';
     document.getElementById('tokenInput').value = tok;
     updateTokenStatus(tok);
 
-    // check draft
+    if (isEditMode) {
+        // Switch UI to edit mode
+        document.title = '编辑文章 — Macle Chen';
+        document.querySelector('.nav-label').textContent = '✏️ 编辑文章';
+        document.getElementById('publishBtn').textContent = '保存修改';
+        document.getElementById('draftModal').remove(); // no draft restore in edit mode
+
+        // Load metadata from POSTS array
+        editPost = (typeof POSTS !== 'undefined') ? POSTS.find(p => p.id === editId) : null;
+        if (editPost) {
+            document.getElementById('fTitle').value    = editPost.title;
+            document.getElementById('fCategory').value = editPost.category;
+            document.getElementById('fTags').value     = (editPost.tags || []).join(', ');
+            document.getElementById('fSummary').value  = editPost.summary || '';
+        }
+
+        // Load markdown content
+        showToast('正在加载文章内容…', 'info');
+        try {
+            const r = await fetch(`./posts/${editId}.md?_=${Date.now()}`);
+            if (r.ok) {
+                document.getElementById('mdEditor').value = await r.text();
+                showToast('文章加载完成', 'ok', 2000);
+            } else {
+                showToast('Markdown 文件加载失败，可重新编写', 'err');
+            }
+        } catch { showToast('网络错误，无法加载文章', 'err'); }
+        updatePreview(); updateWordCount();
+        return;
+    }
+
+    // New post mode: check draft
     const draft = localStorage.getItem(DRAFT_KEY);
     if (draft) {
         try {
@@ -348,15 +399,10 @@ function restoreDraft() {
     if (d.content)  document.getElementById('mdEditor').value  = d.content;
     updatePreview();
 }
-function discardDraft() {
-    localStorage.removeItem(DRAFT_KEY);
-    closeDraftModal();
-}
-function closeDraftModal() {
-    document.getElementById('draftModal').classList.remove('show');
-}
+function discardDraft() { localStorage.removeItem(DRAFT_KEY); closeDraftModal(); }
+function closeDraftModal() { document.getElementById('draftModal').classList.remove('show'); }
 
-// ── Input & Preview ───────────────────────────────────────────────
+// ── Preview ───────────────────────────────────────────────────────
 marked.setOptions({
     highlight: (code, lang) => {
         if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, { language: lang }).value;
@@ -364,95 +410,71 @@ marked.setOptions({
     },
     breaks: true, gfm: true
 });
-
 let previewTimer;
 function onInput() {
     clearTimeout(previewTimer);
     previewTimer = setTimeout(updatePreview, 120);
     updateWordCount();
 }
-
 function updatePreview() {
     const md = document.getElementById('mdEditor').value;
     document.getElementById('preview').innerHTML = md
         ? marked.parse(md)
         : '<span style="color:#8b949e;font-size:0.9rem">开始写作，右侧实时预览…</span>';
 }
-
 function updateWordCount() {
-    const text = document.getElementById('mdEditor').value;
-    const count = text.replace(/\s/g, '').length;
+    const count = document.getElementById('mdEditor').value.replace(/\s/g, '').length;
     document.getElementById('wordCount').textContent = count + ' 字';
 }
 
-// ── Toolbar helpers ───────────────────────────────────────────────
+// ── Toolbar ───────────────────────────────────────────────────────
 function getEditor() { return document.getElementById('mdEditor'); }
-
 function wrap(before, after, lineMode = false) {
     const el = getEditor();
     let s = el.selectionStart, e = el.selectionEnd;
     let sel = el.value.substring(s, e);
     if (lineMode && !sel) {
-        // move to line start
         const lines = el.value.substring(0, s).split('\n');
-        const lineStart = s - lines[lines.length - 1].length;
-        el.setSelectionRange(lineStart, lineStart);
-        s = e = lineStart;
+        const ls = s - lines[lines.length - 1].length;
+        el.setSelectionRange(ls, ls); s = e = ls;
     }
-    const replacement = before + sel + after;
-    el.setRangeText(replacement, s, e, 'select');
+    el.setRangeText(before + sel + after, s, e, 'select');
     if (!sel) el.setSelectionRange(s + before.length, s + before.length);
-    el.focus();
-    onInput();
+    el.focus(); onInput();
 }
-
 function insertLink() {
-    const el = getEditor();
-    const s = el.selectionStart, e = el.selectionEnd;
-    const sel = el.value.substring(s, e) || '链接文字';
-    el.setRangeText(`[${sel}](https://)`, s, e, 'select');
+    const el = getEditor(), s = el.selectionStart, e = el.selectionEnd;
+    el.setRangeText(`[${el.value.substring(s, e) || '链接文字'}](https://)`, s, e, 'select');
     el.focus(); onInput();
 }
-
 function insertImg() {
-    const el = getEditor();
-    const s = el.selectionStart, e = el.selectionEnd;
-    el.setRangeText(`![图片描述](https://图片地址)`, s, e, 'end');
+    const el = getEditor(), s = el.selectionStart, e = el.selectionEnd;
+    el.setRangeText('![图片描述](https://图片地址)', s, e, 'end');
     el.focus(); onInput();
 }
-
 function insertHr() {
-    const el = getEditor();
-    const s = el.selectionStart;
+    const el = getEditor(), s = el.selectionStart;
     el.setRangeText('\n\n---\n\n', s, s, 'end');
     el.focus(); onInput();
 }
-
 function handleKey(e) {
     if (e.key === 'Tab') {
         e.preventDefault();
         const el = e.target, s = el.selectionStart, en = el.selectionEnd;
         el.value = el.value.substring(0, s) + '    ' + el.value.substring(en);
-        el.selectionStart = el.selectionEnd = s + 4;
-        onInput();
+        el.selectionStart = el.selectionEnd = s + 4; onInput();
     }
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault();
-        saveDraft();
-    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveDraft(); }
 }
 
 // ── Token ─────────────────────────────────────────────────────────
 function saveToken() {
     const t = document.getElementById('tokenInput').value.trim();
-    localStorage.setItem(TOKEN_KEY, t);
-    updateTokenStatus(t);
+    localStorage.setItem(TOKEN_KEY, t); updateTokenStatus(t);
 }
 function updateTokenStatus(t) {
     const el = document.getElementById('tokenStatus');
-    if (!t) {
-        el.textContent = '未设置'; el.className = 'token-err'; return;
-    }
+    if (!t) { el.textContent = '未设置'; el.className = 'token-err'; return; }
     const ok = t.startsWith('ghp_') || t.startsWith('github_pat_');
     el.textContent = ok ? '✓ 已设置' : '⚠ 格式可能有误';
     el.className = ok ? 'token-ok' : 'token-err';
@@ -461,11 +483,11 @@ function updateTokenStatus(t) {
 // ── Draft ─────────────────────────────────────────────────────────
 function saveDraft() {
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
-        title:    document.getElementById('fTitle').value,
+        title: document.getElementById('fTitle').value,
         category: document.getElementById('fCategory').value,
-        tags:     document.getElementById('fTags').value,
-        summary:  document.getElementById('fSummary').value,
-        content:  document.getElementById('mdEditor').value,
+        tags: document.getElementById('fTags').value,
+        summary: document.getElementById('fSummary').value,
+        content: document.getElementById('mdEditor').value,
     }));
     showToast('草稿已保存 (Cmd/Ctrl+S)', 'info');
 }
@@ -474,11 +496,7 @@ function saveDraft() {
 async function ghFetch(token, path, method = 'GET', body = null) {
     const opts = {
         method,
-        headers: {
-            Authorization: `token ${token}`,
-            Accept: 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
-        },
+        headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
     };
     if (body) opts.body = JSON.stringify(body);
     const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, opts);
@@ -486,38 +504,65 @@ async function ghFetch(token, path, method = 'GET', body = null) {
     if (!r.ok) throw new Error(data.message || `HTTP ${r.status}`);
     return data;
 }
-
-async function createFile(token, path, content, message) {
-    // check for existing SHA (needed for update)
-    let sha;
-    try { const d = await ghFetch(token, path); sha = d.sha; } catch {}
+async function putFile(token, path, content, message, sha) {
     const body = { message, content: strToB64(content) };
     if (sha) body.sha = sha;
     return ghFetch(token, path, 'PUT', body);
 }
-
-async function updatePostsJs(token, post) {
-    const data = await ghFetch(token, 'js/posts.js');
-    const current = b64ToStr(data.content);
-
-    const tags = JSON.stringify(post.tags);
-    const entry = `  {\n    id: ${JSON.stringify(post.id)},\n    title: \`${jsStr(post.title)}\`,\n    date: ${JSON.stringify(post.date)},\n    category: ${JSON.stringify(post.category)},\n    tags: ${tags},\n    summary: \`${jsStr(post.summary)}\`,\n    cover: "",\n    csdn_url: "",\n  },`;
-
-    const marker = 'const POSTS = [';
-    const idx = current.indexOf(marker);
-    if (idx === -1) throw new Error('posts.js 格式异常，找不到 POSTS 数组');
-
-    const updated = current.slice(0, idx + marker.length) + '\n' + entry + current.slice(idx + marker.length);
-
-    return ghFetch(token, 'js/posts.js', 'PUT', {
-        message: `新增博文：${post.title}`,
-        content: strToB64(updated),
-        sha: data.sha,
-    });
+async function getFileSha(token, path) {
+    try { return (await ghFetch(token, path)).sha; } catch { return null; }
 }
 
-// ── Publish ───────────────────────────────────────────────────────
+// ── Publish (new post) ────────────────────────────────────────────
 async function publish() {
+    if (isEditMode) return saveEdits();
+
+    const token = (localStorage.getItem(TOKEN_KEY) || '').trim();
+    if (!token) { showToast('请先在底部设置 GitHub Token', 'err'); return; }
+
+    const title = document.getElementById('fTitle').value.trim();
+    const content = document.getElementById('mdEditor').value.trim();
+    if (!title)   { showToast('请填写文章标题', 'err'); return; }
+    if (!content) { showToast('文章内容不能为空', 'err'); return; }
+
+    const category = document.getElementById('fCategory').value;
+    const tags     = document.getElementById('fTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    const summary  = document.getElementById('fSummary').value.trim()
+        || content.replace(/```[\s\S]*?```/g, '').replace(/[#*`>!\[\]]/g, '').replace(/\s+/g, ' ').trim().slice(0, 200);
+    const postId   = Date.now().toString();
+    const date     = new Date().toISOString().slice(0, 10);
+
+    const btn = document.getElementById('publishBtn');
+    btn.disabled = true; btn.textContent = '发布中…';
+    try {
+        showToast('正在创建文章文件…', 'info');
+        await putFile(token, `posts/${postId}.md`, content, `新增文章：${title}`, null);
+
+        showToast('正在更新文章列表…', 'info');
+        const jsData = await ghFetch(token, 'js/posts.js');
+        const current = b64ToStr(jsData.content);
+        const marker = 'const POSTS = [';
+        const idx = current.indexOf(marker);
+        if (idx === -1) throw new Error('posts.js 格式异常');
+        const entry = buildEntry({ id: postId, title, date, category, tags, summary, csdn_url: '' });
+        const updated = current.slice(0, idx + marker.length) + '\n' + entry + current.slice(idx + marker.length);
+        await putFile(token, 'js/posts.js', updated, `新增博文：${title}`, jsData.sha);
+
+        localStorage.removeItem(DRAFT_KEY);
+        showToast('✓ 发布成功！约 1~2 分钟后生效', 'ok', 6000);
+        setTimeout(() => {
+            if (confirm(`"${title}" 发布成功！\n\n是否前往文章页面查看？`))
+                location.href = `post.html?id=${postId}`;
+        }, 600);
+    } catch (e) {
+        showToast('发布失败：' + e.message, 'err', 6000);
+    } finally {
+        btn.disabled = false; btn.textContent = '发布文章';
+    }
+}
+
+// ── Save edits (edit mode) ────────────────────────────────────────
+async function saveEdits() {
     const token = (localStorage.getItem(TOKEN_KEY) || '').trim();
     if (!token) { showToast('请先在底部设置 GitHub Token', 'err'); return; }
 
@@ -527,39 +572,35 @@ async function publish() {
     if (!content) { showToast('文章内容不能为空', 'err'); return; }
 
     const category = document.getElementById('fCategory').value;
-    const tagsRaw  = document.getElementById('fTags').value;
-    const tags     = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+    const tags     = document.getElementById('fTags').value.split(',').map(t => t.trim()).filter(Boolean);
     const summary  = document.getElementById('fSummary').value.trim()
         || content.replace(/```[\s\S]*?```/g, '').replace(/[#*`>!\[\]]/g, '').replace(/\s+/g, ' ').trim().slice(0, 200);
-
-    const postId = Date.now().toString();
-    const date   = new Date().toISOString().slice(0, 10);
+    const date     = editPost ? editPost.date : new Date().toISOString().slice(0, 10);
+    const csdnUrl  = editPost ? (editPost.csdn_url || '') : '';
 
     const btn = document.getElementById('publishBtn');
-    btn.disabled = true;
-    btn.textContent = '发布中…';
-
+    btn.disabled = true; btn.textContent = '保存中…';
     try {
-        showToast('正在创建文章文件…', 'info');
-        await createFile(token, `posts/${postId}.md`, content, `新增文章：${title}`);
+        showToast('正在更新文章内容…', 'info');
+        const mdSha = await getFileSha(token, `posts/${editId}.md`);
+        await putFile(token, `posts/${editId}.md`, content, `更新文章：${title}`, mdSha);
 
-        showToast('正在更新文章列表…', 'info');
-        await updatePostsJs(token, { id: postId, title, date, category, tags, summary });
+        showToast('正在更新文章元数据…', 'info');
+        const jsData = await ghFetch(token, 'js/posts.js');
+        const current = b64ToStr(jsData.content);
+        const newEntry = buildEntry({ id: editId, title, date, category, tags, summary, csdn_url: csdnUrl });
+        const updated = replaceEntryInJs(current, editId, newEntry);
+        await putFile(token, 'js/posts.js', updated, `更新博文：${title}`, jsData.sha);
 
-        localStorage.removeItem(DRAFT_KEY);
-        showToast('✓ 发布成功！约 1~2 分钟后 GitHub Pages 生效', 'ok', 6000);
-
+        showToast('✓ 保存成功！约 1~2 分钟后生效', 'ok', 6000);
         setTimeout(() => {
-            if (confirm(`"${title}" 发布成功！\n\n是否前往文章页面查看？`)) {
-                window.location.href = `post.html?id=${postId}`;
-            }
+            if (confirm(`"${title}" 保存成功！\n\n是否前往文章页面查看？`))
+                location.href = `post.html?id=${editId}`;
         }, 600);
     } catch (e) {
-        showToast('发布失败：' + e.message, 'err', 6000);
-        console.error(e);
+        showToast('保存失败：' + e.message, 'err', 6000);
     } finally {
-        btn.disabled = false;
-        btn.textContent = '发布文章';
+        btn.disabled = false; btn.textContent = '保存修改';
     }
 }
 
