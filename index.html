@@ -13,7 +13,7 @@
             --border:       rgba(255,255,255,0.08);
             --border-hover: rgba(255,255,255,0.16);
             --text:         #e6edf3;
-            --text-muted:   #8b949e;
+            --text-muted:   #b0bac5;
             --accent:       #4a9eff;
             --accent-bg:    rgba(74,158,255,0.1);
             --accent-bd:    rgba(74,158,255,0.25);
@@ -99,11 +99,14 @@
         .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
         .social-links { display: flex; flex-direction: column; gap: 9px; }
         .social-link {
-            display: flex; align-items: center; gap: 9px;
-            color: var(--text-muted); font-size: 0.82rem; transition: color 0.15s;
+            display: flex; align-items: center; gap: 10px;
+            color: var(--text-muted); font-size: 0.85rem; transition: color 0.15s;
         }
         .social-link:hover { color: var(--accent); }
-        .social-icon { width: 14px; text-align: center; opacity: 0.6; }
+        .social-icon {
+            width: 20px; text-align: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
 
         /* MAIN */
         .main-col { min-width: 0; }
@@ -182,12 +185,13 @@
         /* CONTACT */
         .contact-row { display: flex; flex-wrap: wrap; gap: 10px; }
         .contact-chip {
-            display: inline-flex; align-items: center; gap: 7px;
-            padding: 7px 14px;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px;
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 8px; font-size: 0.83rem; color: var(--text-muted);
+            border-radius: 8px; font-size: 0.85rem; color: var(--text);
             transition: all 0.15s;
         }
+        .contact-chip span { font-size: 1.05rem; }
         .contact-chip:hover { border-color: var(--accent); color: var(--accent); }
 
         /* FOOTER */
@@ -316,9 +320,9 @@
             <h2 class="sec-label" data-zh="联系方式" data-en="Contact">联系方式</h2>
         </div>
         <div class="contact-row">
-            <a href="mailto:foverleee@gmail.com" class="contact-chip">✉ foverleee@gmail.com</a>
-            <a href="https://web.telegram.org/k/" target="_blank" class="contact-chip">✈ @ChenSirLite</a>
-            <a href="https://github.com/MacleChen" target="_blank" class="contact-chip">⌂ github.com/MacleChen</a>
+            <a href="mailto:foverleee@gmail.com" class="contact-chip"><span>✉</span> foverleee@gmail.com</a>
+            <a href="https://web.telegram.org/k/" target="_blank" class="contact-chip"><span>✈</span> @ChenSirLite</a>
+            <a href="https://github.com/MacleChen" target="_blank" class="contact-chip"><span>⌂</span> github.com/MacleChen</a>
         </div>
 
     </main>
