@@ -306,7 +306,7 @@ function render() {
             <td>
                 <div class="td-actions">
                     <a href="editor.html?id=${p.id}" class="btn btn-ghost btn-sm">✏ 编辑</a>
-                    <button class="btn btn-danger btn-sm" onclick="openDeleteModal('${p.id}', ${JSON.stringify(escHtml(p.title))})">🗑 删除</button>
+                    <button class="btn btn-danger btn-sm" data-id="${p.id}" data-title="${escHtml(p.title)}" onclick="openDeleteModal(this.dataset.id, this.dataset.title)">🗑 删除</button>
                 </div>
             </td>
         </tr>`).join('');
