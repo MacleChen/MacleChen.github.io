@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>博客 — Macle Chen</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- SEO -->
+    <meta name="description" content="Macle Chen 的技术博客，分享 iOS 开发、逆向工程、音视频处理等实战经验">
+    <meta property="og:title" content="博客 — Macle Chen">
+    <meta property="og:description" content="iOS 开发、逆向工程、音视频处理等实战经验分享">
+    <meta property="og:site_name" content="Macle Chen">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <style>
         :root {
             --bg:         #0d1117;
@@ -198,6 +205,35 @@
             .search-wrap { max-width: 100%; }
             .post-row-arrow { display: none; }
         }
+
+        /* ---- Theme Toggle ---- */
+        .theme-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            color: var(--text-muted); font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s; flex-shrink: 0;
+        }
+        .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ---- Back-to-Top ---- */
+        .back-top {
+            position: fixed; bottom: 32px; right: 32px; z-index: 50;
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-muted); font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: all 0.25s;
+            backdrop-filter: blur(8px);
+        }
+        .back-top.visible { opacity: 1; pointer-events: auto; }
+        .back-top:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ---- Light Theme Overrides ---- */
+        [data-theme="light"] { --bg:#f6f8fa; --bg-card:#fff; --bg-hover:#f3f4f6; --border:rgba(0,0,0,.1); --text:#24292f; --text-muted:#57606a; --accent:#0969da; --accent-bg:rgba(9,105,218,.08); --accent-bd:rgba(9,105,218,.2); --tag-bg:rgba(0,0,0,.04); }
+        [data-theme="light"] .nav { background: rgba(246,248,250,0.96); }
+        [data-theme="light"] .theme-btn { background: rgba(0,0,0,0.04); }
+        [data-theme="light"] .search-wrap input { background: #fff; }
     </style>
 </head>
 <body>
@@ -207,13 +243,16 @@
     <div class="nav-links">
         <a href="index.html" data-zh="首页" data-en="Home">首页</a>
         <a href="blog.html" class="active" data-zh="博客" data-en="Blog">博客</a>
+        <a href="tags.html" data-zh="标签" data-en="Tags">标签</a>
         <a href="index.html#contact" data-zh="联系" data-en="Contact">联系</a>
     </div>
     <div class="lang-toggle">
         <button id="btn-zh" onclick="setLang('zh')" class="active">中</button>
         <button id="btn-en" onclick="setLang('en')">EN</button>
     </div>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
 </nav>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
 
 <div class="page-wrap">
     <div class="page-header">
@@ -388,6 +427,28 @@
     }
 
     setLang(currentLang);
+
+    // ---- Theme Toggle ----
+    const THEME_KEY = 'macle_theme';
+    function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY) || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem(THEME_KEY, next);
+        document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
+    initTheme();
+
+    // ---- Back-to-Top ----
+    window.addEventListener('scroll', () => {
+        const backTop = document.getElementById('backTop');
+        if (backTop) backTop.classList.toggle('visible', window.scrollY > 400);
+    });
 </script>
 </body>
 </html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — 页面未找到 | Macle Chen</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <style>
+        :root { --bg:#0d1117; --bg-card:#161b22; --border:rgba(255,255,255,.08); --text:#e6edf3; --text-muted:#8b949e; --accent:#4a9eff; }
+        [data-theme="light"] { --bg:#f6f8fa; --bg-card:#fff; --border:rgba(0,0,0,.1); --text:#24292f; --text-muted:#57606a; --accent:#0969da; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0; background: var(--bg); color: var(--text);
+            min-height: 100vh; display: flex; flex-direction: column;
+        }
+        .nav {
+            position: sticky; top: 0; z-index: 100;
+            height: 54px;
+            background: rgba(13,17,23,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 28px; gap: 8px;
+        }
+        [data-theme="light"] .nav { background: rgba(246,248,250,0.96); }
+        .nav-logo { font-size: 0.98rem; font-weight: 700; color: var(--text); margin-right: auto; text-decoration: none; }
+        .nav-logo em { color: var(--accent); font-style: normal; }
+        .nav-links { display: flex; gap: 2px; }
+        .nav-links a {
+            color: var(--text-muted); padding: 5px 11px;
+            border-radius: 6px; font-size: 0.875rem; transition: all 0.15s; text-decoration: none;
+        }
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .main {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 60px 24px;
+        }
+        .container { text-align: center; max-width: 480px; }
+        .err-code {
+            font-size: 7rem; font-weight: 900; line-height: 1;
+            background: linear-gradient(135deg, var(--accent), #3498db);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin: 0 0 8px;
+        }
+        .err-title { font-size: 1.6rem; font-weight: 700; margin: 0 0 12px; }
+        .err-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin: 0 0 36px; }
+        .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            padding: 12px 28px; border-radius: 24px;
+            background: var(--accent); color: #fff;
+            text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.85; transform: scale(1.03); }
+        .btn-secondary {
+            padding: 12px 28px; border-radius: 24px;
+            background: transparent; color: var(--text-muted);
+            border: 1px solid var(--border); text-decoration: none;
+            font-size: 0.9rem; transition: all 0.2s;
+        }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .suggestions { margin-top: 48px; }
+        .suggestions h3 { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px; }
+        .suggestion-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .suggestion-link {
+            padding: 6px 16px; border-radius: 20px;
+            border: 1px solid var(--border); color: var(--text-muted);
+            text-decoration: none; font-size: 0.85rem; transition: all 0.15s;
+        }
+        .suggestion-link:hover { border-color: var(--accent); color: var(--accent); }
+        footer {
+            padding: 16px 24px; text-align: center;
+            font-size: 0.78rem; color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <a href="index.html" class="nav-logo">Macle<em>.</em>dev</a>
+    <div class="nav-links">
+        <a href="index.html">首页</a>
+        <a href="blog.html">博客</a>
+        <a href="tags.html">标签</a>
+        <a href="index.html#contact">联系</a>
+    </div>
+</nav>
+
+<main class="main">
+    <div class="container">
+        <div class="err-code">404</div>
+        <h1 class="err-title">页面未找到</h1>
+        <p class="err-desc">
+            你访问的页面不存在或已被移除。<br>
+            可能是链接已失效，或者你输入了错误的地址。
+        </p>
+        <div class="btn-group">
+            <a href="index.html" class="btn-primary">回到首页</a>
+            <a href="blog.html" class="btn-secondary">浏览文章</a>
+        </div>
+        <div class="suggestions">
+            <h3>快速导航</h3>
+            <div class="suggestion-links">
+                <a href="blog.html" class="suggestion-link">全部文章</a>
+                <a href="tags.html" class="suggestion-link">标签云</a>
+                <a href="index.html#contact" class="suggestion-link">联系作者</a>
+                <a href="feed.xml" class="suggestion-link">RSS 订阅</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 Macle Chen &nbsp;·&nbsp; 用心分享技术</p>
+</footer>
+</body>
+</html>

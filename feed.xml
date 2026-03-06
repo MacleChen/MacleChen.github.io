@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Macle Chen 技术博客</title>
+    <link>https://maclechen.github.io</link>
+    <description>iOS 开发、逆向工程、音视频处理等实战经验分享</description>
+    <language>zh-CN</language>
+    <managingEditor>foverleee@gmail.com (Macle Chen)</managingEditor>
+    <webMaster>foverleee@gmail.com (Macle Chen)</webMaster>
+    <lastBuildDate>Thu, 06 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://maclechen.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>新版Rootful越狱处理手机</title>
+      <link>https://maclechen.github.io/post.html?id=1772765437410</link>
+      <guid>https://maclechen.github.io/post.html?id=1772765437410</guid>
+      <pubDate>Thu, 06 Mar 2026 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[准备：1. Intel Mac Book Pro 16 寸，mac os 15.3.1。安装指导：https://palera.in/download/?tab=macos。二进制执行文件放置路径：/usr/local/bin，添加可执行权限：chmod +x palera1n。]]></description>
+    </item>
+
+    <item>
+      <title>Telegram-ios 运行ipa到iPhone上</title>
+      <link>https://maclechen.github.io/post.html?id=155525634</link>
+      <guid>https://maclechen.github.io/post.html?id=155525634</guid>
+      <pubDate>Wed, 03 Dec 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[本文介绍了Telegram-iOS项目的编译流程。首先需要通过Git克隆项目源码，然后配置build-system目录下的开发配置文件，包括设置bundle ID、API凭证和开发者账号信息。]]></description>
+    </item>
+
+    <item>
+      <title>iOS超级签申请流程及环境部署</title>
+      <link>https://maclechen.github.io/post.html?id=148554940</link>
+      <guid>https://maclechen.github.io/post.html?id=148554940</guid>
+      <pubDate>Tue, 10 Jun 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[本文介绍了苹果开发者账号中App Store Connect API的配置流程，包括生成API密钥、下载p8文件、创建通用签名证书等步骤。详细说明了从请求API访问权限到部署自动化签名的完整过程。]]></description>
+    </item>
+
+    <item>
+      <title>ios版本的Tiktok二次安装不上，提示：Unable to Install "TikTok"</title>
+      <link>https://maclechen.github.io/post.html?id=148433524</link>
+      <guid>https://maclechen.github.io/post.html?id=148433524</guid>
+      <pubDate>Wed, 04 Jun 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[问题：Domain: IXUserPresentableErrorDomain Code: 1 Recovery Suggestion: Failed to load Info.plist from bundle。解决方案详情见正文。]]></description>
+    </item>
+
+    <item>
+      <title>MonkeyDev开发ios插件运行后崩溃报错error: libarclite_iphoneos.a(arclite.o) failed to load objfile for</title>
+      <link>https://maclechen.github.io/post.html?id=147517545</link>
+      <guid>https://maclechen.github.io/post.html?id=147517545</guid>
+      <pubDate>Fri, 25 Apr 2025 00:00:00 +0000</pubDate>
+      <category>逆向开发</category>
+      <description><![CDATA[解决办法：1. 打开调试的相关代码。2. 注释会导致崩溃的代码。]]></description>
+    </item>
+
+    <item>
+      <title>ios开发中xxx.debug.dylib not found</title>
+      <link>https://maclechen.github.io/post.html?id=147412213</link>
+      <guid>https://maclechen.github.io/post.html?id=147412213</guid>
+      <pubDate>Tue, 22 Apr 2025 00:00:00 +0000</pubDate>
+      <category>逆向开发</category>
+      <description><![CDATA[原因分析：由于之前的老项目中没有xxx.debug.dylib，好像是xcode16以后才有的特性。解决办法：在build setting中设置ENABLE_DEBUG_DYLIB 为NO。]]></description>
+    </item>
+
+    <item>
+      <title>iOS中使用AWS上传zip文件到Minio上的oss平台上</title>
+      <link>https://maclechen.github.io/post.html?id=147401279</link>
+      <guid>https://maclechen.github.io/post.html?id=147401279</guid>
+      <pubDate>Mon, 21 Apr 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[集成AWS相关库（千万不要用最新的版本，否则会出现风格化虚拟路径，找不到主机名），编写集成的相关代码，在Minio后台查看文件是否上传成功。]]></description>
+    </item>
+
+    <item>
+      <title>宝马2016款泰产F800GS更换前减震油封和防尘盖</title>
+      <link>https://maclechen.github.io/post.html?id=147373536</link>
+      <guid>https://maclechen.github.io/post.html?id=147373536</guid>
+      <pubDate>Sun, 20 Apr 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[详细介绍宝马F800GS前减震油封和防尘盖更换全过程，包括工具准备、拆装步骤、减震油加注量等关键信息。]]></description>
+    </item>
+
+    <item>
+      <title>ios开发的Monkeydev的越狱app应用，报错 The Internet connection appears to be offline., Code: -1009</title>
+      <link>https://maclechen.github.io/post.html?id=147304943</link>
+      <guid>https://maclechen.github.io/post.html?id=147304943</guid>
+      <pubDate>Thu, 17 Apr 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[给工程中的xxx.entitlements文件中添加xpc相关的权限，全部赋予自己的app，因为是越狱环境，好像也不弹窗。]]></description>
+    </item>
+
+    <item>
+      <title>Mac电脑交叉编译iphone设备可以运行的redsocks, openssl, libsevent</title>
+      <link>https://maclechen.github.io/post.html?id=147245651</link>
+      <guid>https://maclechen.github.io/post.html?id=147245651</guid>
+      <pubDate>Tue, 15 Apr 2025 00:00:00 +0000</pubDate>
+      <category>逆向开发</category>
+      <description><![CDATA[准备：intel x86_64芯片的mac电脑，系统为mac os15.3.1，iphone为6s的ios14.4(rootful越狱)。使用Theos内置的clang编译出iOS Mach-O可执行文件。]]></description>
+    </item>
+
+    <item>
+      <title>iPhone/iPad使用Palera1n进行rootful越狱</title>
+      <link>https://maclechen.github.io/post.html?id=147240722</link>
+      <guid>https://maclechen.github.io/post.html?id=147240722</guid>
+      <pubDate>Tue, 15 Apr 2025 00:00:00 +0000</pubDate>
+      <category>iOS开发</category>
+      <description><![CDATA[详细介绍使用Palera1n对iPhone/iPad进行rootful越狱的完整步骤，包括下载、执行、等待过程中的注意事项。]]></description>
+    </item>
+
+  </channel>
+</rss>

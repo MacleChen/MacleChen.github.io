@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文章 - Macle Chen</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- SEO -->
+    <meta id="meta-desc" name="description" content="Macle Chen 的技术博客，专注 iOS 开发与逆向工程">
+    <meta id="og-title" property="og:title" content="Macle Chen">
+    <meta id="og-desc" property="og:description" content="Macle Chen 的技术博客">
+    <meta id="og-url" property="og:url" content="">
+    <meta property="og:site_name" content="Macle Chen">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary">
 
     <!-- Markdown 渲染 -->
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
@@ -523,22 +532,132 @@
                 padding-right: 16px;
             }
         }
+
+        /* ---- Reading Progress Bar ---- */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; z-index: 300;
+            height: 3px; width: 0%;
+            background: linear-gradient(90deg, #4a9eff, #3498db);
+            transition: width 0.1s linear;
+            pointer-events: none;
+        }
+
+        /* ---- Code Copy Button ---- */
+        .pre-wrap { position: relative; }
+        .code-copy-btn {
+            position: absolute; top: 10px; right: 10px;
+            padding: 4px 10px; border-radius: 6px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.6); font-size: 0.75rem; cursor: pointer;
+            transition: all 0.2s; font-family: inherit; line-height: 1.4;
+        }
+        .code-copy-btn:hover { background: rgba(74,158,255,0.2); border-color: #4a9eff; color: #4a9eff; }
+        .code-copy-btn.copied { background: rgba(46,160,67,0.2); border-color: #2ea043; color: #2ea043; }
+
+        /* ---- Prev / Next Navigation ---- */
+        .post-nav {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+            padding: 24px 40px; border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .post-nav-item {
+            display: flex; flex-direction: column; gap: 5px;
+            padding: 14px 16px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-decoration: none; transition: all 0.2s;
+        }
+        .post-nav-item:hover { border-color: #4a9eff; background: rgba(74,158,255,0.05); }
+        .post-nav-next { text-align: right; }
+        .post-nav-label { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+        .post-nav-title {
+            font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .post-nav-item:hover .post-nav-title { color: #4a9eff; }
+
+        /* ---- Theme Toggle ---- */
+        .theme-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.6); font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s; flex-shrink: 0;
+        }
+        .theme-btn:hover { border-color: #4a9eff; color: #4a9eff; }
+
+        /* ---- Back-to-Top Button ---- */
+        .back-top {
+            position: fixed; bottom: 100px; right: 32px; z-index: 50;
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(22,27,34,0.9); border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.6); font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: all 0.25s;
+            backdrop-filter: blur(8px);
+        }
+        .back-top.visible { opacity: 1; pointer-events: auto; }
+        .back-top:hover { border-color: #4a9eff; color: #4a9eff; }
+
+        /* ---- Light Theme Overrides ---- */
+        [data-theme="light"] body { background: #f6f8fa; color: #24292f; }
+        [data-theme="light"] .nav { background: rgba(246,248,250,0.96); border-bottom-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .nav-logo { color: #24292f; }
+        [data-theme="light"] .nav-links a { color: #57606a; }
+        [data-theme="light"] .nav-links a:hover { color: #24292f; background: rgba(0,0,0,0.05); }
+        [data-theme="light"] .lang-toggle { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .lang-toggle button { color: #57606a; }
+        [data-theme="light"] .theme-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: #57606a; }
+        [data-theme="light"] .post-article { background: #fff; border-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .post-title { color: #24292f; }
+        [data-theme="light"] .post-date { color: rgba(0,0,0,0.45); }
+        [data-theme="light"] .post-tag { background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.5); }
+        [data-theme="light"] .post-content { color: rgba(0,0,0,0.8); }
+        [data-theme="light"] .post-content h1,
+        [data-theme="light"] .post-content h2,
+        [data-theme="light"] .post-content h3 { color: #24292f; }
+        [data-theme="light"] .post-content strong { color: #24292f; }
+        [data-theme="light"] .post-content code { background: rgba(0,0,0,0.06); color: #c0392b; }
+        [data-theme="light"] .post-content blockquote { background: rgba(9,105,218,0.05); color: rgba(0,0,0,0.6); }
+        [data-theme="light"] .post-content hr { border-top-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .post-content h2 { border-bottom-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .post-header { border-bottom-color: rgba(0,0,0,0.07); }
+        [data-theme="light"] .post-footer { border-top-color: rgba(0,0,0,0.07); }
+        [data-theme="light"] .comments-section { border-top-color: rgba(0,0,0,0.07); }
+        [data-theme="light"] .post-nav { border-top-color: rgba(0,0,0,0.07); }
+        [data-theme="light"] .post-nav-item { border-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .post-nav-label { color: rgba(0,0,0,0.35); }
+        [data-theme="light"] .post-nav-title { color: rgba(0,0,0,0.7); }
+        [data-theme="light"] .share-btn { border-color: rgba(0,0,0,0.15); color: rgba(0,0,0,0.6); }
+        [data-theme="light"] .sidebar-card { background: #fff; border-color: rgba(0,0,0,0.1); }
+        [data-theme="light"] .sidebar-title { color: rgba(0,0,0,0.45); }
+        [data-theme="light"] .toc-list a { color: rgba(0,0,0,0.55); }
+        [data-theme="light"] .related-post-title { color: rgba(0,0,0,0.75); }
+        [data-theme="light"] .related-post-date { color: rgba(0,0,0,0.3); }
+        [data-theme="light"] .related-post { border-bottom-color: rgba(0,0,0,0.06); }
+        [data-theme="light"] .giscus-hint { background: rgba(9,105,218,0.05); border-color: rgba(9,105,218,0.2); color: #57606a; }
+        [data-theme="light"] .code-copy-btn { background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.5); }
+        [data-theme="light"] .back-top { background: rgba(255,255,255,0.9); border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.5); }
+        [data-theme="light"] .not-found h2 { color: rgba(0,0,0,0.6); }
     </style>
 </head>
 <body>
+
+<div id="progress-bar"></div>
 
 <nav class="nav">
     <a href="index.html" class="nav-logo">Macle<em>.</em>dev</a>
     <div class="nav-links">
         <a href="index.html" data-zh="首页" data-en="Home">首页</a>
         <a href="blog.html" data-zh="博客" data-en="Blog">博客</a>
+        <a href="tags.html" data-zh="标签" data-en="Tags">标签</a>
         <a href="index.html#contact" data-zh="联系" data-en="Contact">联系</a>
     </div>
     <div class="lang-toggle">
         <button id="btn-zh" onclick="setLang('zh')" class="active">中</button>
         <button id="btn-en" onclick="setLang('en')">EN</button>
     </div>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
 </nav>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
 
 <div id="app"></div>
 
@@ -672,6 +791,14 @@
         }
 
         document.title = post.title + ' - Macle Chen';
+        const metaDesc = document.getElementById('meta-desc');
+        if (metaDesc) metaDesc.content = (post.summary || '').slice(0, 160) || 'Macle Chen 技术博客';
+        const ogTitle = document.getElementById('og-title');
+        if (ogTitle) ogTitle.content = post.title + ' - Macle Chen';
+        const ogDesc = document.getElementById('og-desc');
+        if (ogDesc) ogDesc.content = (post.summary || '').slice(0, 160);
+        const ogUrl = document.getElementById('og-url');
+        if (ogUrl) ogUrl.content = location.href;
 
         // Show loading skeleton first
         app.innerHTML = `<div class="page-layout">
@@ -722,6 +849,11 @@
             headings.push({ id: hid, text: el.textContent, level: parseInt(el.tagName[1]) });
         });
 
+        // Prev / Next navigation
+        const postIdx = POSTS.findIndex(p => p.id === post.id);
+        const prevPost = postIdx > 0 ? POSTS[postIdx - 1] : null;
+        const nextPost = postIdx < POSTS.length - 1 ? POSTS[postIdx + 1] : null;
+
         // Related posts
         const related = POSTS
             .filter(p => p.id !== post.id &&
@@ -758,6 +890,16 @@
                             ${csdnLink}
                         </div>
                         <button class="donate-btn-inline" onclick="openDonate()">&#9749; 打赏支持</button>
+                    </div>
+                    <div class="post-nav">
+                        ${prevPost ? `<a class="post-nav-item post-nav-prev" href="post.html?id=${prevPost.id}">
+                            <span class="post-nav-label">← 上一篇</span>
+                            <span class="post-nav-title">${prevPost.title}</span>
+                        </a>` : '<div></div>'}
+                        ${nextPost ? `<a class="post-nav-item post-nav-next" href="post.html?id=${nextPost.id}">
+                            <span class="post-nav-label">下一篇 →</span>
+                            <span class="post-nav-title">${nextPost.title}</span>
+                        </a>` : '<div></div>'}
                     </div>
                     <div class="comments-section">
                         <div class="comments-title">&#128172; 评论区</div>
@@ -830,6 +972,26 @@
             wrap.appendChild(t);
         });
 
+        // Code copy buttons
+        document.querySelectorAll('#postContent pre').forEach(pre => {
+            const wrap = document.createElement('div');
+            wrap.className = 'pre-wrap';
+            pre.parentNode.insertBefore(wrap, pre);
+            wrap.appendChild(pre);
+            const btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.textContent = '复制';
+            btn.onclick = () => {
+                const code = pre.querySelector('code');
+                navigator.clipboard.writeText(code ? code.textContent : pre.textContent).then(() => {
+                    btn.textContent = '已复制!';
+                    btn.classList.add('copied');
+                    setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+                });
+            };
+            wrap.appendChild(btn);
+        });
+
         // Smooth scroll for TOC
         document.querySelectorAll('.toc-list a').forEach(a => {
             a.addEventListener('click', e => {
@@ -841,6 +1003,36 @@
     }
 
     renderPost();
+
+    // ---- Theme Toggle ----
+    const THEME_KEY = 'macle_theme';
+    function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY) || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem(THEME_KEY, next);
+        document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
+    initTheme();
+
+    // ---- Reading Progress Bar ----
+    window.addEventListener('scroll', () => {
+        const bar = document.getElementById('progress-bar');
+        const body = document.body;
+        const html = document.documentElement;
+        const scrollTop = window.scrollY;
+        const total = Math.max(body.scrollHeight, html.scrollHeight) - window.innerHeight;
+        bar.style.width = total > 0 ? (scrollTop / total * 100) + '%' : '0%';
+
+        // Back-to-top visibility
+        const backTop = document.getElementById('backTop');
+        if (backTop) backTop.classList.toggle('visible', scrollTop > 400);
+    });
 </script>
 </body>
 </html>
