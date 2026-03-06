@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>博客 — Macle Chen</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Google Analytics (替换 G-XXXXXXXXXX 为你的真实 Measurement ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
     <!-- SEO -->
     <meta name="description" content="Macle Chen 的技术博客，分享 iOS 开发、逆向工程、音视频处理等实战经验">
     <meta property="og:title" content="博客 — Macle Chen">
@@ -12,6 +21,7 @@
     <meta property="og:site_name" content="Macle Chen">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
+    <link rel="alternate" type="application/rss+xml" title="Macle Chen RSS" href="/feed.xml">
     <style>
         :root {
             --bg:         #0d1117;
@@ -192,6 +202,33 @@
         }
         .cat-btn.active .cat-count { background: rgba(255,255,255,0.25); }
 
+        /* SUBSCRIBE BANNER */
+        .subscribe-banner {
+            background: linear-gradient(135deg, rgba(74,158,255,0.08), rgba(52,152,219,0.04));
+            border: 1px solid rgba(74,158,255,0.2);
+            border-radius: 16px; padding: 28px 32px;
+            display: flex; align-items: center; gap: 24px;
+            margin-top: 40px; flex-wrap: wrap;
+        }
+        .subscribe-banner-text { flex: 1; min-width: 200px; }
+        .subscribe-banner-text h3 { margin: 0 0 4px; font-size: 1rem; font-weight: 700; }
+        .subscribe-banner-text p { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+        .subscribe-banner-form { display: flex; gap: 8px; flex-wrap: wrap; }
+        .subscribe-banner-input {
+            padding: 9px 14px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text); font-size: 0.875rem;
+            outline: none; font-family: inherit; min-width: 200px;
+            transition: border-color 0.2s;
+        }
+        .subscribe-banner-input:focus { border-color: var(--accent); }
+        .subscribe-banner-input::placeholder { color: var(--text-muted); }
+        .subscribe-banner-btn {
+            padding: 9px 20px; border-radius: 8px; border: none;
+            background: var(--accent); color: #fff; font-size: 0.875rem;
+            font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s;
+        }
+        .subscribe-banner-btn:hover { opacity: 0.85; }
+
         /* FOOTER */
         footer {
             border-top: 1px solid var(--border);
@@ -272,10 +309,26 @@
     </div>
 
     <div class="post-list" id="postList"></div>
+
+    <div class="subscribe-banner">
+        <div class="subscribe-banner-text">
+            <h3>&#128231; 订阅最新文章</h3>
+            <p>新文章发布时第一时间通知，不发垃圾邮件</p>
+        </div>
+        <form class="subscribe-banner-form" onsubmit="handleSubscribe(event)">
+            <input class="subscribe-banner-input" type="email" placeholder="your@email.com" required>
+            <button class="subscribe-banner-btn" type="submit">免费订阅</button>
+        </form>
+    </div>
 </div>
 
 <footer>
     <p data-zh="© 2025 Macle Chen" data-en="© 2025 Macle Chen">© 2025 Macle Chen</p>
+    <p style="margin-top:6px">
+        <a href="feed.xml" style="color:var(--text-muted);font-size:0.75rem;margin:0 8px">RSS 订阅</a>
+        <a href="sitemap.xml" style="color:var(--text-muted);font-size:0.75rem;margin:0 8px">Sitemap</a>
+        <a href="tags.html" style="color:var(--text-muted);font-size:0.75rem;margin:0 8px">标签云</a>
+    </p>
 </footer>
 
 <script src="js/posts.js"></script>
@@ -449,6 +502,14 @@
         const backTop = document.getElementById('backTop');
         if (backTop) backTop.classList.toggle('visible', window.scrollY > 400);
     });
+
+    function handleSubscribe(e) {
+        e.preventDefault();
+        const email = e.target.querySelector('input').value;
+        window.open('https://buttondown.com/api/emails/embed-subscribe/maclechen?email=' + encodeURIComponent(email), '_blank');
+        alert('已跳转到订阅确认页，请查收邮件确认订阅 :)');
+        e.target.reset();
+    }
 </script>
 </body>
 </html>

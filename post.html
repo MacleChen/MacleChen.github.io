@@ -14,6 +14,16 @@
     <meta property="og:site_name" content="Macle Chen">
     <meta property="og:type" content="article">
     <meta name="twitter:card" content="summary">
+    <link id="canonical-url" rel="canonical" href="https://maclechen.github.io/post.html">
+
+    <!-- Google Analytics (替换 G-XXXXXXXXXX 为你的真实 Measurement ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
 
     <!-- Markdown 渲染 -->
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
@@ -92,6 +102,17 @@
             height: 320px;
             object-fit: cover;
             display: block;
+        }
+        .post-cover-gradient {
+            width: 100%; height: 180px; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: rgba(255,255,255,0.6);
+            position: relative; overflow: hidden;
+        }
+        .post-cover-gradient::before {
+            content: ''; position: absolute; inset: 0;
+            background: inherit; filter: blur(0px);
         }
         .post-header {
             padding: 32px 40px 24px;
@@ -501,6 +522,69 @@
         }
         .qr-sublabel { font-size: 0.72rem; color: rgba(255,255,255,0.3); }
 
+        /* ---- WeChat Share Modal ---- */
+        .wechat-modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); z-index: 300;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .wechat-modal-overlay.open { display: flex; }
+        .wechat-modal {
+            background: #1a1a2e; border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px; padding: 28px; text-align: center;
+            max-width: 280px; width: 90%;
+        }
+        .wechat-modal h3 { margin: 0 0 8px; font-size: 1rem; color: #fff; }
+        .wechat-modal p { margin: 0 0 16px; font-size: 0.82rem; color: rgba(255,255,255,0.5); }
+        #wechatQrImg { width: 180px; height: 180px; border-radius: 8px; background: #fff; }
+        .wechat-url-box {
+            margin-top: 14px; padding: 8px 12px;
+            background: rgba(255,255,255,0.06); border-radius: 8px;
+            font-size: 0.75rem; color: rgba(255,255,255,0.5);
+            word-break: break-all; cursor: pointer; transition: background 0.2s;
+        }
+        .wechat-url-box:hover { background: rgba(255,255,255,0.1); }
+        .wechat-modal-close {
+            margin-top: 16px; padding: 8px 24px;
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px; color: rgba(255,255,255,0.6);
+            cursor: pointer; font-size: 0.85rem; font-family: inherit;
+            transition: all 0.15s;
+        }
+        .wechat-modal-close:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+        /* ---- Subscribe Form ---- */
+        .subscribe-card {
+            background: linear-gradient(135deg, rgba(74,158,255,0.08), rgba(52,152,219,0.05));
+            border: 1px solid rgba(74,158,255,0.2);
+            border-radius: 16px; padding: 20px; margin-top: 0;
+        }
+        .subscribe-title { font-size: 0.9rem; font-weight: 700; color: #fff; margin: 0 0 6px; }
+        .subscribe-desc { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin: 0 0 14px; line-height: 1.5; }
+        .subscribe-form { display: flex; flex-direction: column; gap: 8px; }
+        .subscribe-input {
+            width: 100%; padding: 9px 12px; border-radius: 8px;
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+            color: #e6edf3; font-size: 0.85rem; outline: none; font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .subscribe-input:focus { border-color: #4a9eff; }
+        .subscribe-input::placeholder { color: rgba(255,255,255,0.3); }
+        .subscribe-btn {
+            padding: 9px 16px; border-radius: 8px;
+            background: #4a9eff; border: none; color: #fff;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            transition: opacity 0.2s; font-family: inherit;
+        }
+        .subscribe-btn:hover { opacity: 0.85; }
+        [data-theme="light"] .subscribe-title { color: #24292f; }
+        [data-theme="light"] .subscribe-desc { color: rgba(0,0,0,0.5); }
+        [data-theme="light"] .subscribe-input { background: #fff; border-color: rgba(0,0,0,0.12); color: #24292f; }
+        [data-theme="light"] .subscribe-input::placeholder { color: rgba(0,0,0,0.3); }
+        [data-theme="light"] .wechat-modal { background: #f6f8fa; }
+        [data-theme="light"] .wechat-modal h3 { color: #24292f; }
+
         /* ---- Not Found ---- */
         .not-found {
             text-align: center;
@@ -665,6 +749,17 @@
 <button class="fab-donate" onclick="openDonate()" title="打赏支持">&#9749;</button>
 <div class="fab-donate-label">请作者喝杯咖啡</div>
 
+<!-- WeChat Share Modal -->
+<div class="wechat-modal-overlay" id="wechatModal" onclick="closeWechatOnOverlay(event)">
+    <div class="wechat-modal">
+        <h3>&#128241; 微信扫码分享</h3>
+        <p>用微信扫描二维码打开此文章</p>
+        <img id="wechatQrImg" alt="WeChat QR">
+        <div class="wechat-url-box" id="wechatUrlBox" onclick="copyLink()">点击复制链接</div>
+        <button class="wechat-modal-close" onclick="closeWechat()">关闭</button>
+    </div>
+</div>
+
 <!-- Donate Modal -->
 <div class="modal-overlay" id="donateModal" onclick="closeDonateOnOverlay(event)">
     <div class="modal">
@@ -733,6 +828,31 @@
     function shareToTelegram(title) {
         window.open('https://t.me/share/url?url=' + encodeURIComponent(location.href) + '&text=' + encodeURIComponent(title), '_blank');
     }
+    function shareToWeibo(title) {
+        window.open('https://service.weibo.com/share/share.php?url=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(title + ' - Macle Chen'), '_blank');
+    }
+    function openWechatShare() {
+        const url = location.href;
+        // Use QR code API to generate QR for the current URL
+        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+        document.getElementById('wechatQrImg').src = qrUrl;
+        document.getElementById('wechatUrlBox').textContent = url;
+        document.getElementById('wechatModal').classList.add('open');
+    }
+    function closeWechat() {
+        document.getElementById('wechatModal').classList.remove('open');
+    }
+    function closeWechatOnOverlay(e) {
+        if (e.target === document.getElementById('wechatModal')) closeWechat();
+    }
+    function handleSubscribe(e) {
+        e.preventDefault();
+        const email = e.target.querySelector('input').value;
+        // Open Buttondown subscription with email prefilled
+        window.open('https://buttondown.com/api/emails/embed-subscribe/maclechen?email=' + encodeURIComponent(email), '_blank');
+        showToast('正在跳转到订阅确认页…');
+        e.target.reset();
+    }
 
     function showToast(msg) {
         const t = document.createElement('div');
@@ -799,6 +919,26 @@
         if (ogDesc) ogDesc.content = (post.summary || '').slice(0, 160);
         const ogUrl = document.getElementById('og-url');
         if (ogUrl) ogUrl.content = location.href;
+        // Canonical URL
+        const canonical = document.getElementById('canonical-url');
+        if (canonical) canonical.href = location.href;
+        // JSON-LD structured data
+        const ldScript = document.createElement('script');
+        ldScript.type = 'application/ld+json';
+        ldScript.text = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": post.title,
+            "description": (post.summary || '').slice(0, 200),
+            "datePublished": post.date,
+            "author": { "@type": "Person", "name": "Macle Chen", "url": "https://maclechen.github.io" },
+            "publisher": { "@type": "Person", "name": "Macle Chen" },
+            "url": location.href,
+            "keywords": (post.tags || []).join(', '),
+            "articleSection": post.category,
+            "inLanguage": "zh-CN"
+        });
+        document.head.appendChild(ldScript);
 
         // Show loading skeleton first
         app.innerHTML = `<div class="page-layout">
@@ -860,6 +1000,23 @@
                 (p.category === post.category || p.tags.some(t => post.tags.includes(t))))
             .slice(0, 5);
 
+        // Category gradient map for default covers
+        const catGradients = {
+            'iOS开发':   'linear-gradient(135deg,#1a1a4e,#0d3b8e,#1565c0)',
+            'iOS\u5f00\u53d1': 'linear-gradient(135deg,#1a1a4e,#0d3b8e,#1565c0)',
+            '逆向开发':  'linear-gradient(135deg,#3a0030,#7b1fa2,#c62828)',
+            '\u9006\u5411\u5f00\u53d1': 'linear-gradient(135deg,#3a0030,#7b1fa2,#c62828)',
+            '音视频':    'linear-gradient(135deg,#004d40,#00695c,#1b5e20)',
+            'Android':  'linear-gradient(135deg,#1b3a1b,#2e7d32,#558b2f)',
+            'Python':   'linear-gradient(135deg,#1a2a4a,#1565c0,#0277bd)',
+        };
+        const defaultGradient = 'linear-gradient(135deg,#161b22,#1c2333,#0d1117)';
+        const coverHtml = post.cover
+            ? `<img class="post-cover" src="${post.cover}" alt="${post.title}" onerror="this.style.display='none'">`
+            : `<div class="post-cover-gradient" style="background:${catGradients[post.category] || defaultGradient}">
+                <span style="position:relative;z-index:1">${post.category}</span>
+               </div>`;
+
         const csdnLink = post.csdn_url
             ? `<a href="${post.csdn_url}" target="_blank" class="share-btn">原文 CSDN</a>`
             : '';
@@ -868,8 +1025,7 @@
         <div class="page-layout">
             <main>
                 <article class="post-article">
-                    ${post.cover ? `<img class="post-cover" src="${post.cover}" alt="${post.title}"
-                        onerror="this.style.display='none'">` : ''}
+                    ${coverHtml}
                     <div class="post-header">
                         <div class="post-meta-top">
                             <span class="post-category">${post.category}</span>
@@ -886,6 +1042,8 @@
                     <div class="post-footer">
                         <div class="share-btns">
                             <button class="share-btn" onclick="copyLink()">&#128279; 复制链接</button>
+                            <button class="share-btn" onclick="shareToWeibo('${post.title.replace(/'/g, "\\'")}')">&#127381; 微博</button>
+                            <button class="share-btn" onclick="openWechatShare()">&#128241; 微信</button>
                             <button class="share-btn" onclick="shareToTelegram('${post.title.replace(/'/g, "\\'")}')">&#128240; Telegram</button>
                             ${csdnLink}
                         </div>
@@ -938,6 +1096,15 @@
                     <a href="index.html" style="color:#4a9eff;font-size:0.85rem;text-decoration:none">
                         查看完整介绍 →
                     </a>
+                </div>
+
+                <div class="subscribe-card">
+                    <div class="subscribe-title">&#128231; 订阅更新</div>
+                    <p class="subscribe-desc">新文章第一时间通知，不发垃圾邮件</p>
+                    <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+                        <input class="subscribe-input" type="email" placeholder="your@email.com" required>
+                        <button class="subscribe-btn" type="submit">免费订阅</button>
+                    </form>
                 </div>
             </aside>
         </div>`;

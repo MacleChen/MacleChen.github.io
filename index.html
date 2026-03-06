@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Macle Chen — iOS 开发者 · 逆向工程</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Google Analytics (替换 G-XXXXXXXXXX 为你的真实 Measurement ID) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
     <!-- SEO -->
     <meta name="description" content="Macle Chen - iOS 开发者，专注逆向工程、音视频处理。分享技术博客与开源项目。">
     <meta property="og:title" content="Macle Chen — iOS 开发者 · 逆向工程">
@@ -13,6 +22,7 @@
     <meta property="og:site_name" content="Macle Chen">
     <meta name="twitter:card" content="summary">
     <meta name="author" content="Macle Chen">
+    <link rel="alternate" type="application/rss+xml" title="Macle Chen RSS" href="/feed.xml">
     <style>
         :root {
             --bg:           #0d1117;
@@ -356,6 +366,11 @@
 
 <footer>
     <p data-zh="© 2025 Macle Chen &nbsp;·&nbsp; 用心分享技术" data-en="© 2025 Macle Chen &nbsp;·&nbsp; Sharing tech with passion">© 2025 Macle Chen &nbsp;·&nbsp; 用心分享技术</p>
+    <p style="margin-top:6px">
+        <a href="feed.xml" style="color:var(--text-muted);font-size:0.75rem;margin:0 8px">RSS 订阅</a>
+        <a href="sitemap.xml" style="color:var(--text-muted);font-size:0.75rem;margin:0 8px">Sitemap</a>
+        <a href="blog.html" style="color:var(--text-muted);font-size:0.75rem;margin:0 8px">全部文章</a>
+    </p>
 </footer>
 
 <script src="js/posts.js"></script>
