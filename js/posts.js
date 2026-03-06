@@ -13,16 +13,6 @@ const POSTS = [
     csdn_url: "",
   },
   {
-    id: "1772765249392",
-    title: `新版Rootful越狱处理手机`,
-    date: "2026-03-06",
-    category: "iOS开发",
-    tags: [],
-    summary: `准备： 1. Intel Mac Book Pro 16 寸， mac os 15.3.1 1. 设置手机的root密码都为：alpine 安装指导：https://palera.in/download/?tab=macos 二进制执行文件放置路径：/usr/local/bin 添加可执行权限：chmod +x palera1n 使用文档：https://docs.palera.in/docs/r`,
-    cover: "",
-    csdn_url: "",
-  },
-  {
     id: "155525634",
     title: `Telegram-ios 运行ipa到iPhone上`,
     date: "2025-12-03",
