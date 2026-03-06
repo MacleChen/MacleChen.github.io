@@ -268,9 +268,35 @@
             font-size: 1.2rem;
             font-weight: 700;
             color: #fff;
-            margin: 0 0 24px;
+            margin: 0 0 16px;
         }
-        .giscus-notice { display: none; }
+        .giscus-hint {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: rgba(74,158,255,0.07);
+            border: 1px solid rgba(74,158,255,0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: #8b949e;
+            margin-bottom: 24px;
+        }
+        .giscus-hint-icon { font-size: 1rem; }
+        .giscus-login-btn {
+            margin-left: auto;
+            padding: 5px 14px;
+            background: #4a9eff;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: opacity 0.15s;
+        }
+        .giscus-login-btn:hover { opacity: 0.85; }
 
         /* ---- Sidebar ---- */
         .sidebar { display: flex; flex-direction: column; gap: 20px; }
@@ -735,22 +761,12 @@
                     </div>
                     <div class="comments-section">
                         <div class="comments-title">&#128172; 评论区</div>
-                        <div class="giscus-notice" id="giscusNotice"></div>
-                        <script src="https://giscus.app/client.js"
-                            data-repo="MacleChen/MacleChen.github.io"
-                            data-repo-id="R_kgDOLVPSkA"
-                            data-category="General"
-                            data-category-id="DIC_kwDOLVPSkM4C3uNw"
-                            data-mapping="pathname"
-                            data-strict="0"
-                            data-reactions-enabled="1"
-                            data-emit-metadata="0"
-                            data-input-position="bottom"
-                            data-theme="dark_protanopia"
-                            data-lang="zh-CN"
-                            crossorigin="anonymous"
-                            async>
-                        <\/script>
+                        <div class="giscus-hint">
+                            <span class="giscus-hint-icon">&#128279;</span>
+                            评论由 <strong>GitHub Discussions</strong> 提供 &mdash; 需要登录 GitHub 账号后才能发表评论或点赞
+                            <a href="https://github.com/login" target="_blank" rel="noopener" class="giscus-login-btn">去登录 →</a>
+                        </div>
+                        <div id="giscus-container"></div>
                     </div>
                 </article>
             </main>
@@ -783,6 +799,27 @@
                 </div>
             </aside>
         </div>`;
+
+        // Load Giscus comments (must be done via createElement, not innerHTML)
+        const giscusContainer = document.getElementById('giscus-container');
+        if (giscusContainer) {
+            const s = document.createElement('script');
+            s.src = 'https://giscus.app/client.js';
+            s.setAttribute('data-repo', 'MacleChen/MacleChen.github.io');
+            s.setAttribute('data-repo-id', 'R_kgDOLVPSkA');
+            s.setAttribute('data-category', 'General');
+            s.setAttribute('data-category-id', 'DIC_kwDOLVPSkM4C3uNw');
+            s.setAttribute('data-mapping', 'pathname');
+            s.setAttribute('data-strict', '0');
+            s.setAttribute('data-reactions-enabled', '1');
+            s.setAttribute('data-emit-metadata', '0');
+            s.setAttribute('data-input-position', 'top');
+            s.setAttribute('data-theme', 'dark_protanopia');
+            s.setAttribute('data-lang', 'zh-CN');
+            s.setAttribute('crossorigin', 'anonymous');
+            s.async = true;
+            giscusContainer.appendChild(s);
+        }
 
         // Wrap tables for horizontal scroll
         document.querySelectorAll('#postContent table').forEach(t => {
