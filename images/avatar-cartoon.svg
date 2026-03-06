@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="100" fill="#1c2333"/>
+
+  <!-- Suit body -->
+  <path d="M 25 200 C 25 158 62 150 100 149 C 138 150 175 158 175 200 Z" fill="#1f2d3d"/>
+  <!-- White shirt collar -->
+  <polygon points="100,158 87,149 94,149" fill="#f0f4f8"/>
+  <polygon points="100,158 113,149 106,149" fill="#f0f4f8"/>
+  <!-- Tie -->
+  <polygon points="100,150 96,158 104,158" fill="#e74c3c"/>
+  <polygon points="96,158 104,158 102,174 98,174" fill="#c0392b"/>
+
+  <!-- Neck -->
+  <rect x="88" y="137" width="24" height="16" rx="8" fill="#f5c39a"/>
+
+  <!-- Face -->
+  <ellipse cx="100" cy="100" rx="50" ry="56" fill="#f5c39a"/>
+
+  <!-- Hair (top + sides) -->
+  <path d="M 50 88 C 50 42 150 42 150 88 L 150 68 C 150 44 50 44 50 68 Z" fill="#1a1a1a"/>
+  <!-- Hair sides / sideburns -->
+  <rect x="50" y="68" width="9" height="28" rx="4" fill="#1a1a1a"/>
+  <rect x="141" y="68" width="9" height="28" rx="4" fill="#1a1a1a"/>
+
+  <!-- Ears -->
+  <ellipse cx="50" cy="104" rx="9" ry="12" fill="#f5c39a"/>
+  <ellipse cx="150" cy="104" rx="9" ry="12" fill="#f5c39a"/>
+  <ellipse cx="50" cy="104" rx="5" ry="7" fill="#e5a878"/>
+  <ellipse cx="150" cy="104" rx="5" ry="7" fill="#e5a878"/>
+
+  <!-- Eyebrows -->
+  <path d="M 67 86 Q 79 81 90 86" stroke="#1a1a1a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M 110 86 Q 121 81 133 86" stroke="#1a1a1a" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- Eye whites -->
+  <ellipse cx="78" cy="100" rx="12" ry="11" fill="white"/>
+  <ellipse cx="122" cy="100" rx="12" ry="11" fill="white"/>
+  <!-- Iris -->
+  <circle cx="79" cy="101" r="7" fill="#4a2c0a"/>
+  <circle cx="123" cy="101" r="7" fill="#4a2c0a"/>
+  <!-- Pupil -->
+  <circle cx="79" cy="101" r="4" fill="#111"/>
+  <circle cx="123" cy="101" r="4" fill="#111"/>
+  <!-- Catchlight -->
+  <circle cx="76" cy="99" r="2" fill="white"/>
+  <circle cx="120" cy="99" r="2" fill="white"/>
+
+  <!-- Glasses (rectangular, matching photo) -->
+  <rect x="61" y="89" width="33" height="23" rx="5" fill="rgba(100,130,180,0.08)" stroke="#111" stroke-width="3.2"/>
+  <rect x="106" y="89" width="33" height="23" rx="5" fill="rgba(100,130,180,0.08)" stroke="#111" stroke-width="3.2"/>
+  <!-- Bridge between lenses -->
+  <line x1="94" y1="100" x2="106" y2="100" stroke="#111" stroke-width="2.8"/>
+  <!-- Temples -->
+  <line x1="61" y1="100" x2="50" y2="97" stroke="#111" stroke-width="2.8" stroke-linecap="round"/>
+  <line x1="139" y1="100" x2="150" y2="97" stroke="#111" stroke-width="2.8" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M 97 114 Q 94 122 97 125 Q 100 126 103 125 Q 106 122 103 114"
+        stroke="#d9956a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+  <!-- Smile -->
+  <path d="M 82 135 Q 100 148 118 135"
+        stroke="#c07048" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M 87 138 Q 100 145 113 138"
+        stroke="#e8956a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>
