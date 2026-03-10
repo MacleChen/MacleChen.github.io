@@ -885,7 +885,16 @@
     }
 
     // ---- Configure marked ----
+    const renderer = new marked.Renderer();
+    renderer.image = function(href, title, text) {
+        // Support both object and string forms of href (marked v9+)
+        const src = (href && typeof href === 'object') ? href.href : href;
+        const alt = text || '';
+        const titleAttr = title ? ` title="${title}"` : '';
+        return `<img src="${src}" alt="${alt}"${titleAttr} referrerpolicy="no-referrer" loading="lazy" style="max-width:100%;border-radius:10px;margin:8px 0;">`;
+    };
     marked.setOptions({
+        renderer,
         highlight: function(code, lang) {
             if (lang && hljs.getLanguage(lang)) {
                 return hljs.highlight(code, { language: lang }).value;

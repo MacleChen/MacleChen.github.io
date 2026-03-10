@@ -403,7 +403,15 @@ function discardDraft() { localStorage.removeItem(DRAFT_KEY); closeDraftModal();
 function closeDraftModal() { document.getElementById('draftModal').classList.remove('show'); }
 
 // ── Preview ───────────────────────────────────────────────────────
+const renderer = new marked.Renderer();
+renderer.image = function(href, title, text) {
+    const src = (href && typeof href === 'object') ? href.href : href;
+    const alt = text || '';
+    const titleAttr = title ? ` title="${title}"` : '';
+    return `<img src="${src}" alt="${alt}"${titleAttr} referrerpolicy="no-referrer" loading="lazy" style="max-width:100%;border-radius:8px;margin:8px 0;">`;
+};
 marked.setOptions({
+    renderer,
     highlight: (code, lang) => {
         if (lang && hljs.getLanguage(lang)) return hljs.highlight(code, { language: lang }).value;
         return hljs.highlightAuto(code).value;
