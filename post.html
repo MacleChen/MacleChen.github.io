@@ -79,10 +79,139 @@
         .lang-toggle button:hover:not(.active) { color: #e6edf3; }
 
         /* ---- Layout ---- */
+        /* ---- Post Hero ---- */
+        body { --page-bg: #0d1117; }
+
+        .post-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 52px 0 88px;
+        }
+        .post-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        /* bottom fade to page background */
+        .post-hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                rgba(0,0,0,0.18) 0%,
+                transparent 35%,
+                transparent 55%,
+                var(--page-bg) 100%);
+        }
+        /* subtle dot grid */
+        .post-hero-dots {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+            background-size: 28px 28px;
+            z-index: 1;
+        }
+        /* glowing orbs */
+        .post-hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(72px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .post-hero-orb-1 { width: 420px; height: 420px; top: -120px; right: -60px; }
+        .post-hero-orb-2 { width: 300px; height: 300px; bottom: -100px; left: -50px; }
+        .post-hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* breadcrumb */
+        .post-hero-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 28px;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.38);
+        }
+        .post-hero-breadcrumb a {
+            color: rgba(255,255,255,0.42);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .post-hero-breadcrumb a:hover { color: rgba(255,255,255,0.82); }
+        .post-hero-breadcrumb .bc-sep { color: rgba(255,255,255,0.18); }
+        .post-hero-breadcrumb .bc-cur {
+            color: rgba(255,255,255,0.52);
+            max-width: 260px;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        /* meta row */
+        .post-hero-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .post-hero-category {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 14px;
+            background: rgba(255,255,255,0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .post-hero-sep { color: rgba(255,255,255,0.2); font-size: 0.7rem; }
+        .post-hero-date, .post-hero-readtime {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.52);
+        }
+        /* title */
+        .post-hero-title {
+            font-size: clamp(1.7rem, 4vw, 2.5rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.3;
+            margin: 0 0 22px;
+            letter-spacing: -0.4px;
+            text-shadow: 0 2px 28px rgba(0,0,0,0.3);
+            max-width: 760px;
+        }
+        /* tags */
+        .post-hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .post-hero-tag {
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 12px;
+            font-size: 0.77rem;
+            color: rgba(255,255,255,0.6);
+            backdrop-filter: blur(4px);
+            transition: all 0.18s;
+            cursor: default;
+        }
+        .post-hero-tag:hover {
+            background: rgba(255,255,255,0.16);
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+
         .page-layout {
             max-width: 1080px;
             margin: 0 auto;
-            padding: 36px 20px 100px;
+            padding: 0 20px 100px;
             display: grid;
             grid-template-columns: minmax(0, 1fr) 240px;
             gap: 32px;
@@ -95,61 +224,7 @@
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 20px;
             overflow: hidden;
-            min-width: 0; /* prevent grid item from overflowing */
-        }
-        .post-cover {
-            width: 100%;
-            height: 320px;
-            object-fit: cover;
-            display: block;
-        }
-        .post-cover-gradient {
-            width: 100%; height: 180px; display: flex;
-            align-items: center; justify-content: center;
-            font-size: 0.85rem; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; color: rgba(255,255,255,0.6);
-            position: relative; overflow: hidden;
-        }
-        .post-cover-gradient::before {
-            content: ''; position: absolute; inset: 0;
-            background: inherit; filter: blur(0px);
-        }
-        .post-header {
-            padding: 32px 40px 24px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-        }
-        .post-meta-top {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .post-category {
-            padding: 4px 12px;
-            background: rgba(52,152,219,0.2);
-            color: #3498db;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .post-date {
-            color: rgba(255,255,255,0.4);
-            font-size: 0.85rem;
-        }
-        .post-title {
-            font-size: 1.9rem;
-            font-weight: 800;
-            line-height: 1.4;
-            color: #fff;
-            margin: 0 0 16px;
-        }
-        .post-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .post-tag {
-            padding: 3px 10px;
-            background: rgba(255,255,255,0.07);
-            border-radius: 10px;
-            font-size: 0.78rem;
-            color: rgba(255,255,255,0.5);
+            min-width: 0;
         }
 
         /* ---- Markdown Content ---- */
@@ -596,22 +671,25 @@
         .not-found a { color: #3498db; }
 
         @media (max-width: 900px) {
+            .post-hero { padding: 40px 0 72px; }
+            .post-hero-breadcrumb { display: none; }
+            .post-hero-title { font-size: 1.55rem; }
             .page-layout {
                 grid-template-columns: minmax(0, 1fr);
-                padding: 24px 16px 80px;
+                padding: 0 16px 80px;
             }
             .sidebar { order: -1; }
-            .post-header, .post-content, .post-footer, .comments-section {
+            .post-content, .post-footer, .comments-section {
                 padding-left: 20px;
                 padding-right: 20px;
             }
-            .post-title { font-size: 1.4rem; }
-            .post-cover { height: 200px; }
             .qr-row { grid-template-columns: 1fr 1fr; }
             .fab-donate { bottom: 20px; right: 20px; }
         }
         @media (max-width: 480px) {
-            .post-header, .post-content, .post-footer, .comments-section {
+            .post-hero { padding: 32px 0 64px; }
+            .post-hero-title { font-size: 1.35rem; }
+            .post-content, .post-footer, .comments-section {
                 padding-left: 16px;
                 padding-right: 16px;
             }
@@ -690,10 +768,8 @@
         [data-theme="light"] .lang-toggle { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .lang-toggle button { color: #57606a; }
         [data-theme="light"] .theme-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: #57606a; }
+        [data-theme="light"] { --page-bg: #f6f8fa; }
         [data-theme="light"] .post-article { background: #fff; border-color: rgba(0,0,0,0.1); }
-        [data-theme="light"] .post-title { color: #24292f; }
-        [data-theme="light"] .post-date { color: rgba(0,0,0,0.45); }
-        [data-theme="light"] .post-tag { background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.5); }
         [data-theme="light"] .post-content { color: rgba(0,0,0,0.8); }
         [data-theme="light"] .post-content h1,
         [data-theme="light"] .post-content h2,
@@ -703,7 +779,6 @@
         [data-theme="light"] .post-content blockquote { background: rgba(9,105,218,0.05); color: rgba(0,0,0,0.6); }
         [data-theme="light"] .post-content hr { border-top-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .post-content h2 { border-bottom-color: rgba(0,0,0,0.1); }
-        [data-theme="light"] .post-header { border-bottom-color: rgba(0,0,0,0.07); }
         [data-theme="light"] .post-footer { border-top-color: rgba(0,0,0,0.07); }
         [data-theme="light"] .comments-section { border-top-color: rgba(0,0,0,0.07); }
         [data-theme="light"] .post-nav { border-top-color: rgba(0,0,0,0.07); }
@@ -1009,42 +1084,66 @@
                 (p.category === post.category || p.tags.some(t => post.tags.includes(t))))
             .slice(0, 5);
 
-        // Category gradient map for default covers
-        const catGradients = {
-            'iOS开发':   'linear-gradient(135deg,#1a1a4e,#0d3b8e,#1565c0)',
-            'iOS\u5f00\u53d1': 'linear-gradient(135deg,#1a1a4e,#0d3b8e,#1565c0)',
-            '逆向开发':  'linear-gradient(135deg,#3a0030,#7b1fa2,#c62828)',
-            '\u9006\u5411\u5f00\u53d1': 'linear-gradient(135deg,#3a0030,#7b1fa2,#c62828)',
-            '音视频':    'linear-gradient(135deg,#004d40,#00695c,#1b5e20)',
-            'Android':  'linear-gradient(135deg,#1b3a1b,#2e7d32,#558b2f)',
-            'Python':   'linear-gradient(135deg,#1a2a4a,#1565c0,#0277bd)',
+        // Reading time estimate (Chinese + English ~500 chars/min)
+        const readChars = mdText.replace(/```[\s\S]*?```/g,'').replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g,'').length;
+        const readMinutes = Math.max(1, Math.round(readChars / 500));
+
+        // Per-category hero config: gradient + orb colours
+        const catConfig = {
+            'iOS开发':    { grad:'linear-gradient(135deg,#040c2a,#0a1f60,#0d3b8e)', orb1:'#1565c0', orb2:'#4a9eff' },
+            'iOS\u5f00\u53d1': { grad:'linear-gradient(135deg,#040c2a,#0a1f60,#0d3b8e)', orb1:'#1565c0', orb2:'#4a9eff' },
+            '逆向开发':   { grad:'linear-gradient(135deg,#160020,#380048,#660080)', orb1:'#9c27b0', orb2:'#f50057' },
+            '\u9006\u5411\u5f00\u53d1': { grad:'linear-gradient(135deg,#160020,#380048,#660080)', orb1:'#9c27b0', orb2:'#f50057' },
+            '音视频':     { grad:'linear-gradient(135deg,#001812,#003828,#005040)', orb1:'#00897b', orb2:'#66bb6a' },
+            'Android':   { grad:'linear-gradient(135deg,#08120a,#143c18,#1b5e22)', orb1:'#43a047', orb2:'#aed581' },
+            'Android开发':{ grad:'linear-gradient(135deg,#08120a,#143c18,#1b5e22)', orb1:'#43a047', orb2:'#aed581' },
+            'Python':    { grad:'linear-gradient(135deg,#051020,#0a2248,#0d3a6e)', orb1:'#2196f3', orb2:'#00bcd4' },
+            'Web开发':   { grad:'linear-gradient(135deg,#120628,#280a55,#1a1068)', orb1:'#7c4dff', orb2:'#536dfe' },
+            'Java后端':  { grad:'linear-gradient(135deg,#180a00,#3d1a00,#6b3200)', orb1:'#ff6f00', orb2:'#ef5350' },
+            'Flutter':   { grad:'linear-gradient(135deg,#001828,#003060,#004880)', orb1:'#0288d1', orb2:'#26c6da' },
         };
-        const defaultGradient = 'linear-gradient(135deg,#161b22,#1c2333,#0d1117)';
-        const coverHtml = post.cover
-            ? `<img class="post-cover" src="${post.cover}" alt="${post.title}" onerror="this.style.display='none'">`
-            : `<div class="post-cover-gradient" style="background:${catGradients[post.category] || defaultGradient}">
-                <span style="position:relative;z-index:1">${post.category}</span>
-               </div>`;
+        const defaultCat = { grad:'linear-gradient(135deg,#0d1117,#161b22,#1c2333)', orb1:'#3f4a5a', orb2:'#2d3748' };
+        const cat = catConfig[post.category] || defaultCat;
+
+        // Hero background: cover image (with dark overlay) or category gradient
+        const heroBgStyle = post.cover
+            ? `background: linear-gradient(to bottom,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.72) 100%),url('${post.cover}') center/cover`
+            : `background: ${cat.grad}`;
 
         const csdnLink = post.csdn_url
             ? `<a href="${post.csdn_url}" target="_blank" class="share-btn">原文 CSDN</a>`
             : '';
 
         app.innerHTML = `
+        <div class="post-hero">
+            <div class="post-hero-bg" style="${heroBgStyle}"></div>
+            <div class="post-hero-dots"></div>
+            <div class="post-hero-orb post-hero-orb-1" style="background:${cat.orb1}"></div>
+            <div class="post-hero-orb post-hero-orb-2" style="background:${cat.orb2}"></div>
+            <div class="post-hero-inner">
+                <div class="post-hero-breadcrumb">
+                    <a href="index.html">首页</a>
+                    <span class="bc-sep">›</span>
+                    <a href="blog.html">博客</a>
+                    <span class="bc-sep">›</span>
+                    <span class="bc-cur">${post.title}</span>
+                </div>
+                <div class="post-hero-meta">
+                    <span class="post-hero-category">${post.category}</span>
+                    <span class="post-hero-sep">·</span>
+                    <span class="post-hero-date">📅 ${formatDate(post.date)}</span>
+                    <span class="post-hero-sep">·</span>
+                    <span class="post-hero-readtime">⏱ 约 ${readMinutes} 分钟阅读</span>
+                </div>
+                <h1 class="post-hero-title">${post.title}</h1>
+                <div class="post-hero-tags">
+                    ${post.tags.map(t => `<span class="post-hero-tag"># ${t}</span>`).join('')}
+                </div>
+            </div>
+        </div>
         <div class="page-layout">
             <main>
                 <article class="post-article">
-                    ${coverHtml}
-                    <div class="post-header">
-                        <div class="post-meta-top">
-                            <span class="post-category">${post.category}</span>
-                            <span class="post-date">${formatDate(post.date)}</span>
-                        </div>
-                        <h1 class="post-title">${post.title}</h1>
-                        <div class="post-tags">
-                            ${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}
-                        </div>
-                    </div>
                     <div class="post-content" id="postContent">
                         ${tempDiv.innerHTML}
                     </div>
