@@ -31,6 +31,22 @@
             border-radius: 6px; font-size: 0.875rem; transition: all 0.15s; text-decoration: none;
         }
         .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .theme-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            color: var(--text-muted); font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s; flex-shrink: 0;
+        }
+        .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+        [data-theme="light"] .theme-btn { background: rgba(0,0,0,0.04); }
+        /* background dot decoration */
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(circle, rgba(74,158,255,0.045) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .nav, .main, footer { position: relative; z-index: 1; }
         .main {
             flex: 1; display: flex; align-items: center; justify-content: center;
             padding: 60px 24px;
@@ -84,6 +100,7 @@
         <a href="tags.html">标签</a>
         <a href="index.html#contact">联系</a>
     </div>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换主题">🌙</button>
 </nav>
 
 <main class="main">
@@ -113,5 +130,21 @@
 <footer>
     <p>© 2026 Macle Chen &nbsp;·&nbsp; 用心分享技术</p>
 </footer>
+<script>
+    const THEME_KEY = 'macle_theme';
+    function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY) || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
+    }
+    function toggleTheme() {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem(THEME_KEY, next);
+        document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
+    initTheme();
+</script>
 </body>
 </html>
