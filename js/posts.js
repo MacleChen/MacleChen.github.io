@@ -3,6 +3,16 @@
 
 const POSTS = [
   {
+    id: "1773219539148",
+    title: `Mac 电脑搭建OpenClaw 配置飞书bot环境`,
+    date: "2026-03-11",
+    category: "iOS开发",
+    tags: ["ios","macos","OpenClaw"],
+    summary: `备注：Mac os 15以上操作系统 1. 安装步骤： 参考链接：https://zhuanlan.zhihu.com/p/2012858559835176997 github的仓库：https://github.com/openclaw/openclaw?tab=readme-ov-file 2. 使用：一个终端打开gateway：pnpm openclaw gateway --port 187`,
+    cover: "",
+    csdn_url: "",
+  },
+  {
     id: "1772765437410",
     title: `新版Rootful越狱处理手机`,
     date: "2026-03-06",
