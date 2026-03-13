@@ -263,18 +263,26 @@
         }
         .post-content pre {
             border-radius: 12px;
-            overflow-x: auto;
             margin: 20px 0;
             padding: 0;
+            background: #1e2433;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: auto;
         }
+        /* override hljs background so it matches our defined color */
+        .post-content pre .hljs { background: transparent; }
         .post-content pre code {
             background: transparent;
             padding: 20px;
             border-radius: 12px;
             display: block;
-            font-size: 0.88rem;
-            line-height: 1.7;
+            font-size: 0.85rem;
+            line-height: 1.75;
             color: inherit;
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow-wrap: anywhere;
         }
         .post-content blockquote {
             border-left: 4px solid #4a9eff;
@@ -797,6 +805,8 @@
         [data-theme="light"] .post-content h3 { color: #24292f; }
         [data-theme="light"] .post-content strong { color: #24292f; }
         [data-theme="light"] .post-content code { background: rgba(0,0,0,0.06); color: #c0392b; }
+        [data-theme="light"] .post-content pre { background: #f0f2f5; }
+        [data-theme="light"] .post-content pre code { color: #24292f; }
         [data-theme="light"] .post-content blockquote { background: #ddeeff; color: rgba(0,0,0,0.75); }
         [data-theme="light"] .post-content hr { border-top-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .post-content h2 { border-bottom-color: rgba(0,0,0,0.1); }
