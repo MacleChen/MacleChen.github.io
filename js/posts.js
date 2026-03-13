@@ -3,6 +3,16 @@
 
 const POSTS = [
   {
+    id: "1773370887460",
+    title: `Xcode下载模拟器失败和ping 失败`,
+    date: "2026-03-13",
+    category: "iOS开发",
+    tags: [],
+    summary: `浏览器和app的网络都是正常，但是Xcode下载模拟器失败`,
+    cover: "",
+    csdn_url: "",
+  },
+  {
     id: "1773219539148",
     title: `Mac 电脑搭建OpenClaw 配置飞书bot环境`,
     date: "2026-03-11",
