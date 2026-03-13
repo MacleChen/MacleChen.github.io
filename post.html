@@ -280,11 +280,22 @@
             border-left: 3px solid #4a9eff;
             margin: 20px 0;
             padding: 14px 20px;
-            background: rgba(74,158,255,0.06);
+            background: rgba(74,158,255,0.1);
             border-radius: 0 10px 10px 0;
-            color: rgba(255,255,255,0.65);
-            font-style: italic;
+            color: rgba(255,255,255,0.75);
+            font-style: normal;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            box-sizing: border-box;
         }
+        .post-content blockquote p {
+            margin: 0 0 8px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .post-content blockquote p:last-child { margin-bottom: 0; }
         .post-content .table-wrap {
             overflow-x: auto;
             margin: 20px 0;
@@ -785,7 +796,7 @@
         [data-theme="light"] .post-content h3 { color: #24292f; }
         [data-theme="light"] .post-content strong { color: #24292f; }
         [data-theme="light"] .post-content code { background: rgba(0,0,0,0.06); color: #c0392b; }
-        [data-theme="light"] .post-content blockquote { background: rgba(9,105,218,0.05); color: rgba(0,0,0,0.6); }
+        [data-theme="light"] .post-content blockquote { background: rgba(9,105,218,0.08); color: rgba(0,0,0,0.7); }
         [data-theme="light"] .post-content hr { border-top-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .post-content h2 { border-bottom-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .post-footer { border-top-color: rgba(0,0,0,0.07); }
