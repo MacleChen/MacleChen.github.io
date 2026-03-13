@@ -3,6 +3,16 @@
 
 const POSTS = [
   {
+    id: "1773385993206",
+    title: `ESP 32  Mac部署`,
+    date: "2026-03-13",
+    category: "iOS开发",
+    tags: ["嵌入式","esp32"],
+    summary: `部署esp 32 设备的硬件钱包信息`,
+    cover: "",
+    csdn_url: "",
+  },
+  {
     id: "1773370887460",
     title: `Xcode下载模拟器失败和ping 失败`,
     date: "2026-03-13",
