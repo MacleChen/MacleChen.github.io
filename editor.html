@@ -315,6 +315,8 @@
             <button class="tb-btn" title="有序列表" onclick="wrap('1. ','',true)">1.</button>
             <button class="tb-btn" title="引用" onclick="wrap('> ','',true)">"</button>
             <button class="tb-btn" title="分割线" onclick="insertHr()">─</button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn" title="修复多余缩进（4空格会被Markdown识别为代码块）" onclick="fixIndent(true)" style="font-size:0.78rem;color:var(--warn)">⚠ 修复缩进</button>
         </div>
 
         <div class="editor-wrap">
@@ -701,10 +703,47 @@ function fileToBase64(file) {
     });
 }
 
+// ── Indent fixer ─────────────────────────────────────────────────
+// Strips leading 4-space indentation from lines that are NOT inside
+// a fenced code block (``` or ~~~). This prevents Markdown from
+// treating indented text/images/links as literal code blocks.
+function stripBadIndent(text) {
+    const lines = text.split('\n');
+    let inFence = false;
+    let changed = false;
+    const out = lines.map(line => {
+        if (/^(`{3,}|~{3,})/.test(line)) { inFence = !inFence; return line; }
+        if (!inFence && line.startsWith('    ')) {
+            changed = true;
+            return line.replace(/^ {4}/, '');
+        }
+        return line;
+    });
+    return { text: out.join('\n'), changed };
+}
+
+// fixIndent: apply to whole editor content; notify=true shows toast
+function fixIndent(notify = false) {
+    const el = getEditor();
+    const { text, changed } = stripBadIndent(el.value);
+    if (!changed) {
+        if (notify) showToast('未检测到多余缩进，无需修复', 'info', 2500);
+        return false;
+    }
+    const pos = el.selectionStart;
+    el.value = text;
+    el.selectionStart = el.selectionEnd = Math.min(pos, text.length);
+    onInput();
+    if (notify) showToast('已自动修复多余的 4 空格缩进', 'ok', 3000);
+    return true;
+}
+
 // ── Paste image from clipboard ────────────────────────────────────
 async function handlePaste(event) {
     const items = event.clipboardData && event.clipboardData.items;
     if (!items) return;
+
+    // 1. Image paste → upload to GitHub
     for (const item of items) {
         if (item.type.startsWith('image/')) {
             event.preventDefault();
@@ -724,8 +763,22 @@ async function handlePaste(event) {
             } catch (e) {
                 showToast('粘贴图片上传失败：' + e.message, 'err', 5000);
             }
-            return; // only handle first image
+            return;
         }
+    }
+
+    // 2. Text paste → auto-fix 4-space indent after browser inserts text
+    const textItem = Array.from(items).find(i => i.type === 'text/plain');
+    if (textItem) {
+        textItem.getAsString(pasted => {
+            if (pasted && /^ {4}/m.test(pasted)) {
+                // Defer until after browser has finished inserting the pasted text
+                setTimeout(() => {
+                    const fixed = fixIndent(false);
+                    if (fixed) showToast('粘贴内容含多余缩进，已自动修复', 'ok', 3000);
+                }, 0);
+            }
+        });
     }
 }
 function insertHr() {
@@ -796,6 +849,7 @@ async function publish() {
     const token = (localStorage.getItem(TOKEN_KEY) || '').trim();
     if (!token) { showToast('请先在底部设置 GitHub Token', 'err'); return; }
 
+    fixIndent(false); // auto-fix bad indentation before publishing
     const title = document.getElementById('fTitle').value.trim();
     const content = document.getElementById('mdEditor').value.trim();
     if (!title)   { showToast('请填写文章标题', 'err'); return; }
@@ -842,6 +896,7 @@ async function saveEdits() {
     const token = (localStorage.getItem(TOKEN_KEY) || '').trim();
     if (!token) { showToast('请先在底部设置 GitHub Token', 'err'); return; }
 
+    fixIndent(false); // auto-fix bad indentation before saving
     const title   = document.getElementById('fTitle').value.trim();
     const content = document.getElementById('mdEditor').value.trim();
     if (!title)   { showToast('请填写文章标题', 'err'); return; }
