@@ -277,23 +277,24 @@
             color: inherit;
         }
         .post-content blockquote {
-            border-left: 3px solid #4a9eff;
+            border-left: 4px solid #4a9eff;
             margin: 20px 0;
-            padding: 14px 20px;
-            background: rgba(74,158,255,0.1);
-            border-radius: 0 10px 10px 0;
-            color: rgba(255,255,255,0.75);
+            padding: 12px 16px;
+            background: #1a2744;
+            border-radius: 0 8px 8px 0;
+            color: rgba(255,255,255,0.82);
             font-style: normal;
+            width: fit-content;
             max-width: 100%;
-            overflow-x: auto;
-            overflow-wrap: break-word;
-            word-break: break-word;
+            min-width: 0;
             box-sizing: border-box;
+            overflow-x: auto;
         }
         .post-content blockquote p {
-            margin: 0 0 8px;
+            margin: 0 0 6px;
             white-space: pre-wrap;
-            word-break: break-word;
+            word-break: break-all;
+            overflow-wrap: anywhere;
         }
         .post-content blockquote p:last-child { margin-bottom: 0; }
         .post-content .table-wrap {
@@ -796,7 +797,7 @@
         [data-theme="light"] .post-content h3 { color: #24292f; }
         [data-theme="light"] .post-content strong { color: #24292f; }
         [data-theme="light"] .post-content code { background: rgba(0,0,0,0.06); color: #c0392b; }
-        [data-theme="light"] .post-content blockquote { background: rgba(9,105,218,0.08); color: rgba(0,0,0,0.7); }
+        [data-theme="light"] .post-content blockquote { background: #ddeeff; color: rgba(0,0,0,0.75); }
         [data-theme="light"] .post-content hr { border-top-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .post-content h2 { border-bottom-color: rgba(0,0,0,0.1); }
         [data-theme="light"] .post-footer { border-top-color: rgba(0,0,0,0.07); }
