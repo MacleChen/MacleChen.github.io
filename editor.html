@@ -688,7 +688,8 @@ async function uploadImageToGitHub(token, file) {
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.message || `HTTP ${r.status}`);
-    return `https://raw.githubusercontent.com/${REPO}/main/${path}`;
+    // Use GitHub Pages URL (same CDN as the site) instead of raw.githubusercontent.com
+    return `${location.origin}/${path}`;
 }
 
 function fileToBase64(file) {
