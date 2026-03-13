@@ -103,6 +103,7 @@
         .tb-sep { width: 1px; height: 16px; background: var(--border); margin: 0 4px; flex-shrink: 0; }
 
         /* editor */
+        .editor-wrap { flex: 1; position: relative; display: flex; flex-direction: column; min-height: 0; }
         .md-editor {
             flex: 1; resize: none; border: none; outline: none;
             background: var(--bg); color: var(--text);
@@ -190,6 +191,63 @@
         .modal p  { margin: 0 0 20px; font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
         .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
 
+        /* ── IMAGE MODAL ── */
+        .img-modal { width: 440px; }
+        .img-modal h3 { margin: 0 0 18px; }
+        .img-drop-zone {
+            border: 2px dashed var(--border); border-radius: 10px;
+            padding: 28px 16px; text-align: center; cursor: pointer;
+            transition: all 0.2s; color: var(--muted); font-size: 0.85rem;
+            background: rgba(255,255,255,0.02);
+        }
+        .img-drop-zone:hover, .img-drop-zone.dragover {
+            border-color: var(--accent); background: rgba(74,158,255,0.06); color: var(--text);
+        }
+        .img-drop-zone .drop-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+        .img-drop-zone .drop-hint { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+        .img-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 14px 0; color: var(--muted); font-size: 0.78rem;
+        }
+        .img-divider::before, .img-divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .img-field { margin-bottom: 10px; }
+        .img-field label {
+            display: block; font-size: 0.68rem; color: var(--muted);
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+            margin-bottom: 4px;
+        }
+        .img-field input {
+            width: 100%; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 6px; color: var(--text); font-size: 0.85rem;
+            padding: 6px 10px; outline: none; font-family: inherit; transition: border-color 0.15s;
+        }
+        .img-field input:focus { border-color: var(--accent); }
+        .img-preview-wrap { margin: 12px 0; display: none; }
+        .img-preview-wrap img {
+            max-width: 100%; max-height: 160px; border-radius: 8px;
+            border: 1px solid var(--border); object-fit: contain;
+        }
+        .img-uploading {
+            display: none; align-items: center; gap: 8px;
+            font-size: 0.82rem; color: var(--accent); margin-top: 8px;
+        }
+        .img-uploading.show { display: flex; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            width: 14px; height: 14px; border: 2px solid var(--border);
+            border-top-color: var(--accent); border-radius: 50%;
+            animation: spin 0.7s linear infinite; flex-shrink: 0;
+        }
+
+        /* paste overlay hint */
+        .paste-hint {
+            position: absolute; pointer-events: none;
+            bottom: 6px; right: 10px;
+            font-size: 0.68rem; color: rgba(255,255,255,0.2);
+        }
+
         @media (max-width: 800px) {
             .workspace { flex-direction: column; }
             .left-pane { width: 100%; height: 55%; border-right: none; border-bottom: 1px solid var(--border); }
@@ -259,10 +317,14 @@
             <button class="tb-btn" title="分割线" onclick="insertHr()">─</button>
         </div>
 
-        <textarea class="md-editor" id="mdEditor"
-            placeholder="# 文章标题&#10;&#10;开始写作…支持完整 Markdown 语法"
-            oninput="onInput()"
-            onkeydown="handleKey(event)"></textarea>
+        <div class="editor-wrap">
+            <textarea class="md-editor" id="mdEditor"
+                placeholder="# 文章标题&#10;&#10;开始写作…支持完整 Markdown 语法"
+                oninput="onInput()"
+                onkeydown="handleKey(event)"
+                onpaste="handlePaste(event)"></textarea>
+            <span class="paste-hint">可粘贴图片</span>
+        </div>
 
         <div class="token-bar">
             <span>GitHub Token</span>
@@ -283,6 +345,48 @@
 
 <!-- toast -->
 <div class="toast" id="toast"></div>
+
+<!-- image upload modal -->
+<div class="modal-bg" id="imgModal">
+    <div class="modal img-modal">
+        <h3>🖼 插入图片</h3>
+
+        <!-- drop zone -->
+        <div class="img-drop-zone" id="imgDropZone" onclick="document.getElementById('imgFileInput').click()">
+            <span class="drop-icon">📁</span>
+            点击选择图片，或将图片拖拽到此处
+            <div class="drop-hint">支持 JPG / PNG / GIF / WebP / SVG</div>
+        </div>
+        <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="onFileSelected(event)">
+
+        <!-- preview -->
+        <div class="img-preview-wrap" id="imgPreviewWrap">
+            <img id="imgPreviewEl" src="" alt="preview">
+        </div>
+
+        <!-- uploading indicator -->
+        <div class="img-uploading" id="imgUploading">
+            <div class="spinner"></div>
+            <span id="imgUploadingText">上传中…</span>
+        </div>
+
+        <div class="img-divider">或输入图片 URL</div>
+
+        <div class="img-field">
+            <label>图片 URL</label>
+            <input type="url" id="imgUrl" placeholder="https://example.com/image.png" oninput="onImgUrlInput()">
+        </div>
+        <div class="img-field">
+            <label>图片描述（Alt）</label>
+            <input type="text" id="imgAlt" placeholder="图片描述" value="图片">
+        </div>
+
+        <div class="modal-btns" style="margin-top:18px">
+            <button class="btn btn-ghost" onclick="closeImgModal()">取消</button>
+            <button class="btn btn-primary" id="imgInsertBtn" onclick="confirmInsertImg()" disabled>插入</button>
+        </div>
+    </div>
+</div>
 
 <!-- draft modal -->
 <div class="modal-bg" id="draftModal">
@@ -343,6 +447,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const tok = localStorage.getItem(TOKEN_KEY) || '';
     document.getElementById('tokenInput').value = tok;
     updateTokenStatus(tok);
+    setupDropZone();
 
     if (isEditMode) {
         // Switch UI to edit mode
@@ -455,10 +560,172 @@ function insertLink() {
     el.setRangeText(`[${el.value.substring(s, e) || '链接文字'}](https://)`, s, e, 'select');
     el.focus(); onInput();
 }
+// ── Image Insert ──────────────────────────────────────────────────
+let _imgInsertPos = 0; // cursor position when image modal opens
+
 function insertImg() {
-    const el = getEditor(), s = el.selectionStart, e = el.selectionEnd;
-    el.setRangeText('![图片描述](https://图片地址)', s, e, 'end');
+    const el = getEditor();
+    _imgInsertPos = el.selectionStart;
+    // reset modal state
+    document.getElementById('imgUrl').value = '';
+    document.getElementById('imgAlt').value = '图片';
+    document.getElementById('imgFileInput').value = '';
+    document.getElementById('imgPreviewWrap').style.display = 'none';
+    document.getElementById('imgPreviewEl').src = '';
+    document.getElementById('imgUploading').classList.remove('show');
+    document.getElementById('imgInsertBtn').disabled = true;
+    document.getElementById('imgModal').classList.add('show');
+}
+
+function closeImgModal() {
+    document.getElementById('imgModal').classList.remove('show');
+    getEditor().focus();
+}
+
+function onImgUrlInput() {
+    const url = document.getElementById('imgUrl').value.trim();
+    document.getElementById('imgInsertBtn').disabled = !url;
+    if (url) {
+        document.getElementById('imgPreviewEl').src = url;
+        document.getElementById('imgPreviewWrap').style.display = 'block';
+    } else {
+        document.getElementById('imgPreviewWrap').style.display = 'none';
+    }
+}
+
+function confirmInsertImg() {
+    const url = document.getElementById('imgUrl').value.trim();
+    const alt = document.getElementById('imgAlt').value.trim() || '图片';
+    if (!url) return;
+    doInsertImg(url, alt);
+    closeImgModal();
+}
+
+function doInsertImg(url, alt) {
+    const el = getEditor();
+    const md = `![${alt}](${url})`;
+    el.setRangeText(md, _imgInsertPos, _imgInsertPos, 'end');
     el.focus(); onInput();
+}
+
+// ── Local file upload ─────────────────────────────────────────────
+async function onFileSelected(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    await uploadAndInsertImage(file);
+}
+
+// Close image modal on backdrop click
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('imgModal').addEventListener('click', e => {
+        if (e.target === document.getElementById('imgModal')) closeImgModal();
+    });
+});
+
+function setupDropZone() {
+    const zone = document.getElementById('imgDropZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', async e => {
+        e.preventDefault(); zone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) await uploadAndInsertImage(file);
+    });
+}
+
+async function uploadAndInsertImage(file) {
+    // show local preview immediately
+    const localUrl = URL.createObjectURL(file);
+    document.getElementById('imgPreviewEl').src = localUrl;
+    document.getElementById('imgPreviewWrap').style.display = 'block';
+    document.getElementById('imgInsertBtn').disabled = true;
+
+    const token = (localStorage.getItem(TOKEN_KEY) || '').trim();
+    if (!token) {
+        // No token: fall back to local object URL placeholder text
+        document.getElementById('imgUrl').value = localUrl;
+        document.getElementById('imgInsertBtn').disabled = false;
+        showToast('未设置 GitHub Token，无法上传到仓库，已插入本地预览链接', 'err', 5000);
+        return;
+    }
+
+    // Upload to GitHub
+    const ui = document.getElementById('imgUploading');
+    const ut = document.getElementById('imgUploadingText');
+    ui.classList.add('show');
+    ut.textContent = '上传中…';
+    try {
+        const remoteUrl = await uploadImageToGitHub(token, file);
+        document.getElementById('imgUrl').value = remoteUrl;
+        document.getElementById('imgPreviewEl').src = remoteUrl;
+        document.getElementById('imgInsertBtn').disabled = false;
+        ut.textContent = '上传成功！';
+        setTimeout(() => ui.classList.remove('show'), 1800);
+    } catch (e) {
+        ui.classList.remove('show');
+        showToast('图片上传失败：' + e.message, 'err', 5000);
+        // still allow inserting with object URL as fallback
+        document.getElementById('imgUrl').value = localUrl;
+        document.getElementById('imgInsertBtn').disabled = false;
+    }
+}
+
+async function uploadImageToGitHub(token, file) {
+    const ext  = (file.name.split('.').pop() || 'png').toLowerCase();
+    const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/\s+/g, '_');
+    const name = `${Date.now()}_${safe}`;
+    const path = `images/posts/${name}`;
+
+    const base64 = await fileToBase64(file);
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+            Authorization: `token ${token}`,
+            Accept: 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: `上传图片：${name}`, content: base64 }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.message || `HTTP ${r.status}`);
+    return `https://raw.githubusercontent.com/${REPO}/main/${path}`;
+}
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// ── Paste image from clipboard ────────────────────────────────────
+async function handlePaste(event) {
+    const items = event.clipboardData && event.clipboardData.items;
+    if (!items) return;
+    for (const item of items) {
+        if (item.type.startsWith('image/')) {
+            event.preventDefault();
+            const file = item.getAsFile();
+            if (!file) continue;
+            _imgInsertPos = getEditor().selectionStart;
+            const token = (localStorage.getItem(TOKEN_KEY) || '').trim();
+            if (!token) {
+                showToast('未设置 GitHub Token，无法上传粘贴的图片', 'err', 4000);
+                return;
+            }
+            showToast('正在上传粘贴的图片…', 'info');
+            try {
+                const url = await uploadImageToGitHub(token, new File([file], `paste_${Date.now()}.png`, { type: file.type }));
+                doInsertImg(url, '图片');
+                showToast('图片上传并插入成功', 'ok');
+            } catch (e) {
+                showToast('粘贴图片上传失败：' + e.message, 'err', 5000);
+            }
+            return; // only handle first image
+        }
+    }
 }
 function insertHr() {
     const el = getEditor(), s = el.selectionStart;
