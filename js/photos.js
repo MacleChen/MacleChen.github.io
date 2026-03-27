@@ -4,6 +4,20 @@
 
 const PHOTOS = [
   {
+    id: "1774589623404",
+    date: "2026-02-19",
+    description: "宣恩革命历史博物馆",
+    src: "images/photos/1774589623404.jpg",
+    camera: "",
+    lens: "",
+    aperture: "",
+    shutter: "",
+    iso: 0,
+    focalLength: "",
+    location: "",
+    tags: [],
+  },
+  {
     id: "1774578689892",
     date: "2026-03-27",
     description: "丹江口市-签到画廊",
