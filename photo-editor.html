@@ -466,7 +466,8 @@ async function publish() {
         // Step 2: Update photos.js
         addStep(steps, 'spin', '正在更新 photos.js…');
         const currentFile = await ghGet(token, 'js/photos.js');
-        const currentContent = atob(currentFile.content.replace(/\n/g,''));
+        // Correctly decode base64 → UTF-8 string (handles Chinese / multibyte chars)
+        const currentContent = decodeURIComponent(escape(atob(currentFile.content.replace(/\n/g,''))));
         const newEntry = `\n  {\n    id: "${entry.id}",\n    date: "${entry.date}",\n    description: ${JSON.stringify(entry.description)},\n    src: ${JSON.stringify(entry.src)},\n    camera: ${JSON.stringify(entry.camera)},\n    lens: ${JSON.stringify(entry.lens)},\n    aperture: ${JSON.stringify(entry.aperture)},\n    shutter: ${JSON.stringify(entry.shutter)},\n    iso: ${entry.iso || 0},\n    focalLength: ${JSON.stringify(entry.focalLength)},\n    location: ${JSON.stringify(entry.location)},\n    tags: ${JSON.stringify(entry.tags)},\n  },`;
         const updated = currentContent.replace(/const PHOTOS\s*=\s*\[/, `const PHOTOS = [${newEntry}`);
         const updatedB64 = btoa(unescape(encodeURIComponent(updated)));

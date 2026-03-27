@@ -6,27 +6,19 @@
     <title>摄影 — Macle Chen</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6CWFXJWEB1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date()); gtag('config', 'G-6CWFXJWEB1');
-    </script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-6CWFXJWEB1');</script>
     <meta name="description" content="Macle Chen 的摄影集，用镜头记录生活">
     <meta property="og:title" content="摄影 — Macle Chen">
     <meta property="og:type" content="website">
     <style>
         :root {
-            --bg:           #0d1117;
-            --bg-card:      #161b22;
-            --bg-hover:     #1c2128;
-            --border:       rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.16);
-            --text:         #e6edf3;
-            --text-muted:   #8b949e;
-            --accent:       #4a9eff;
-            --accent-bg:    rgba(74,158,255,0.1);
-            --accent-bd:    rgba(74,158,255,0.25);
-            --nav-h:        54px;
+            --bg:         #0d1117;
+            --bg-card:    #161b22;
+            --border:     rgba(255,255,255,0.08);
+            --text:       #e6edf3;
+            --text-muted: #8b949e;
+            --accent:     #4a9eff;
+            --nav-h:      54px;
         }
         *, *::before, *::after { box-sizing: border-box; }
         body {
@@ -45,7 +37,7 @@
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; padding: 0 28px; gap: 8px;
         }
-        .nav-logo { font-size: 0.98rem; font-weight: 700; letter-spacing: -0.3px; color: var(--text); margin-right: auto; }
+        .nav-logo { font-size: 0.98rem; font-weight: 700; color: var(--text); margin-right: auto; }
         .nav-logo em { color: var(--accent); font-style: normal; }
         .nav-links { display: flex; gap: 2px; }
         .nav-links a { color: var(--text-muted); padding: 5px 11px; border-radius: 6px; font-size: 0.875rem; transition: all 0.15s; }
@@ -58,89 +50,121 @@
         .theme-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
         .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* ── PAGE WRAP ── */
-        .page-wrap { max-width: 1100px; margin: 0 auto; padding: 44px 20px 80px; }
+        /* ── PAGE ── */
+        .page-wrap { max-width: 1200px; margin: 0 auto; padding: 44px 24px 100px; }
 
         /* ── HERO ── */
-        .hero { margin-bottom: 48px; }
-        .hero-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 6px; }
-        .hero-sub { font-size: 0.92rem; color: var(--text-muted); margin: 0 0 20px; }
-        .hero-stats { display: flex; gap: 20px; flex-wrap: wrap; }
-        .stat-item { display: flex; flex-direction: column; }
-        .stat-num { font-size: 1.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
-        .stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+        .hero { margin-bottom: 52px; }
+        .hero-title { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 6px; }
+        .hero-sub { font-size: 0.9rem; color: var(--text-muted); margin: 0 0 22px; }
+        .hero-stats { display: flex; gap: 28px; }
+        .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1; }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* ── FILTER TAGS ── */
-        .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 36px; }
-        .filter-tag {
-            padding: 4px 12px; font-size: 0.78rem; border-radius: 20px;
-            border: 1px solid var(--border); background: transparent;
-            color: var(--text-muted); cursor: pointer; transition: all 0.15s;
-            font-family: inherit;
-        }
+        /* ── FILTER ── */
+        .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 40px; }
+        .filter-tag { padding: 4px 14px; font-size: 0.78rem; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-family: inherit; }
         .filter-tag:hover { border-color: var(--accent); color: var(--accent); }
         .filter-tag.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
         /* ── TIMELINE ── */
-        .year-group { margin-bottom: 48px; }
-        .year-divider {
-            display: flex; align-items: center; gap: 14px;
-            margin-bottom: 28px;
-        }
-        .year-label {
-            font-size: 1.5rem; font-weight: 800; color: var(--text);
-            letter-spacing: -0.5px; flex-shrink: 0;
-        }
+        .year-group { margin-bottom: 56px; }
+        .year-divider { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+        .year-label { font-size: 1.6rem; font-weight: 800; color: var(--text); letter-spacing: -0.5px; flex-shrink: 0; }
         .year-line { flex: 1; height: 1px; background: var(--border); }
-
-        .month-group { margin-bottom: 28px; }
+        .month-group { margin-bottom: 40px; }
         .month-label {
-            font-size: 0.72rem; font-weight: 700; letter-spacing: 1.2px;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1.4px;
             text-transform: uppercase; color: var(--text-muted);
-            margin-bottom: 12px;
-            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
         }
         .month-label::before { content: ''; display: block; width: 3px; height: 10px; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
-        .month-count { font-weight: 400; color: var(--border-hover); }
 
-        /* ── MASONRY GRID ── */
+        /* ── PHOTO GRID ── */
         .photo-grid {
-            columns: 3 220px;
-            column-gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
         }
-        .photo-item {
-            break-inside: avoid;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            overflow: hidden;
+
+        /* ── PHOTO CARD ── */
+        .photo-card {
             position: relative;
             cursor: pointer;
-            background: var(--bg-card);
-            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            background: #0a0a0a;
         }
-        .photo-item:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-        .photo-item img {
-            width: 100%; display: block;
-            transition: transform 0.35s ease;
+
+        /* Image */
+        .photo-card img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 3 / 2;
+            transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s;
         }
-        .photo-item:hover img { transform: scale(1.03); }
-        .photo-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 55%, transparent 100%);
-            opacity: 0; transition: opacity 0.2s;
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 14px;
+        .photo-card:hover img { transform: scale(1.03); }
+
+        /* Bottom gradient + caption */
+        .photo-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 48px 16px 14px;
+            background: linear-gradient(to top,
+                rgba(0,0,0,0.72) 0%,
+                rgba(0,0,0,0.3) 55%,
+                transparent 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
         }
-        .photo-item:hover .photo-overlay { opacity: 1; }
-        .overlay-desc { font-size: 0.83rem; color: #fff; font-weight: 500; line-height: 1.4; margin-bottom: 5px; }
-        .overlay-meta { font-size: 0.7rem; color: rgba(255,255,255,0.65); display: flex; gap: 8px; flex-wrap: wrap; }
+        .photo-card:hover .photo-caption { opacity: 1; transform: translateY(0); }
+
+        .caption-left { min-width: 0; }
+        .caption-desc {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .caption-loc {
+            display: block;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.55);
+            margin-top: 2px;
+        }
+        .caption-right {
+            flex-shrink: 0;
+            text-align: right;
+        }
+        .caption-meta {
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.4);
+            font-family: ui-monospace, 'SF Mono', monospace;
+            line-height: 1.6;
+        }
+        .caption-meta span { display: block; }
+
+        /* First item in a group spans full width */
+        .photo-card.featured {
+            grid-column: 1 / -1;
+        }
+        .photo-card.featured img {
+            aspect-ratio: 16 / 7;
+        }
 
         /* ── EMPTY STATE ── */
-        .empty-state {
-            text-align: center; padding: 80px 20px;
-            color: var(--text-muted); display: none;
-        }
-        .empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+        .empty-state { display: none; text-align: center; padding: 100px 20px; color: var(--text-muted); }
+        .empty-icon { font-size: 3rem; opacity: 0.3; margin-bottom: 16px; }
         .empty-title { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
         .empty-hint { font-size: 0.85rem; }
         .empty-hint a { color: var(--accent); }
@@ -148,107 +172,101 @@
         /* ── LIGHTBOX ── */
         .lightbox {
             position: fixed; inset: 0; z-index: 500;
-            background: rgba(0,0,0,0.95);
-            display: none; align-items: center; justify-content: center;
-            padding: 20px;
+            background: rgba(0,0,0,0.97);
+            display: none;
+            flex-direction: column;
         }
         .lightbox.open { display: flex; }
+
+        /* top bar */
+        .lb-bar {
+            flex-shrink: 0;
+            height: 52px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .lb-bar-left { display: flex; align-items: center; gap: 14px; }
+        .lb-counter { font-size: 0.8rem; color: rgba(255,255,255,0.35); font-family: monospace; }
+        .lb-desc-bar { font-size: 0.9rem; color: rgba(255,255,255,0.75); font-weight: 500; }
         .lb-close {
-            position: fixed; top: 18px; right: 20px;
-            width: 36px; height: 36px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); border: none; color: #fff;
-            font-size: 1.1rem; cursor: pointer; transition: background 0.15s;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 10;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); border: none; color: rgba(255,255,255,0.6);
+            font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
         }
-        .lb-close:hover { background: rgba(255,255,255,0.2); }
-        .lb-arrow {
-            position: fixed; top: 50%; transform: translateY(-50%);
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); border: none; color: #fff;
-            font-size: 1.4rem; cursor: pointer; transition: background 0.15s;
+        .lb-close:hover { background: rgba(255,255,255,0.16); color: #fff; }
+
+        /* main stage */
+        .lb-stage {
+            flex: 1; min-height: 0;
             display: flex; align-items: center; justify-content: center;
-            z-index: 10;
-        }
-        .lb-arrow:hover { background: rgba(255,255,255,0.2); }
-        .lb-arrow:disabled { opacity: 0.25; cursor: default; }
-        .lb-prev { left: 16px; }
-        .lb-next { right: 16px; }
-        .lb-content {
-            display: flex; gap: 24px; align-items: flex-start;
-            max-width: 1060px; width: 100%; max-height: calc(100vh - 80px);
+            position: relative; padding: 0 70px;
         }
         .lb-img-wrap {
-            flex: 1; min-width: 0;
+            max-width: 100%; max-height: 100%;
             display: flex; align-items: center; justify-content: center;
         }
         .lb-img {
-            max-width: 100%; max-height: calc(100vh - 80px);
-            object-fit: contain; border-radius: 8px;
+            max-width: 100%; max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
             display: block;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
         }
-        .lb-info {
-            width: 240px; flex-shrink: 0;
-            padding: 4px 0;
-            display: flex; flex-direction: column; gap: 16px;
-            overflow-y: auto; max-height: calc(100vh - 80px);
+        .lb-nav {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); border: none;
+            color: rgba(255,255,255,0.7); font-size: 1.3rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
         }
-        .lb-desc {
-            font-size: 1rem; font-weight: 600; color: #fff; line-height: 1.5;
+        .lb-nav:hover { background: rgba(255,255,255,0.18); color: #fff; }
+        .lb-nav:disabled { opacity: 0.15; cursor: default; }
+        .lb-prev { left: 14px; }
+        .lb-next { right: 14px; }
+
+        /* bottom meta strip */
+        .lb-meta-strip {
+            flex-shrink: 0;
+            padding: 12px 24px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
         }
-        .lb-date-loc {
-            font-size: 0.8rem; color: rgba(255,255,255,0.5);
-            display: flex; flex-direction: column; gap: 3px;
-        }
-        .lb-meta-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        .lb-meta-item {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px; padding: 8px 10px;
-        }
-        .lb-meta-key { font-size: 0.62rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
-        .lb-meta-val { font-size: 0.82rem; color: #fff; font-weight: 500; font-family: monospace; }
-        .lb-camera-full {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px; padding: 10px 12px;
-            font-size: 0.8rem; color: rgba(255,255,255,0.7);
-        }
-        .lb-camera-full .cam-label { font-size: 0.62rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
-        .lb-counter { font-size: 0.75rem; color: rgba(255,255,255,0.35); text-align: center; padding-top: 8px; }
-        .lb-tags { display: flex; gap: 5px; flex-wrap: wrap; }
-        .lb-tag { padding: 2px 8px; font-size: 0.7rem; background: rgba(74,158,255,0.15); border: 1px solid rgba(74,158,255,0.3); border-radius: 4px; color: var(--accent); }
+        .lb-meta-item { display: flex; flex-direction: column; gap: 1px; }
+        .lb-meta-key { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.3); }
+        .lb-meta-val { font-size: 0.8rem; color: rgba(255,255,255,0.7); font-family: ui-monospace,'SF Mono',monospace; }
+        .lb-meta-sep { width: 1px; height: 28px; background: rgba(255,255,255,0.08); flex-shrink: 0; }
 
         /* ── FOOTER ── */
         footer { border-top: 1px solid var(--border); padding: 18px 24px; text-align: center; font-size: 0.78rem; color: var(--text-muted); }
 
         /* ── LIGHT THEME ── */
-        [data-theme="light"] { --bg:#f6f8fa; --bg-card:#fff; --bg-hover:#f3f4f6; --border:rgba(0,0,0,.1); --border-hover:rgba(0,0,0,.2); --text:#24292f; --text-muted:#57606a; --accent:#0969da; --accent-bg:rgba(9,105,218,.08); --accent-bd:rgba(9,105,218,.2); }
-        [data-theme="light"] .nav { background: rgba(246,248,250,0.96); }
+        [data-theme="light"] { --bg:#f5f5f5; --bg-card:#fff; --border:rgba(0,0,0,.1); --text:#1a1a1a; --text-muted:#666; --accent:#0969da; }
+        [data-theme="light"] .nav { background: rgba(245,245,245,0.96); }
         [data-theme="light"] .theme-btn { background: rgba(0,0,0,0.04); }
+        [data-theme="light"] .photo-grid { gap: 3px; background: #ddd; }
+        [data-theme="light"] .lightbox { background: rgba(0,0,0,0.95); }
+        [data-theme="light"] .year-label { color: var(--text); }
 
         /* ── RESPONSIVE ── */
-        @media (max-width: 820px) {
-            .photo-grid { columns: 2 160px; }
-            .lb-content { flex-direction: column; align-items: center; }
-            .lb-info { width: 100%; max-width: 480px; flex-direction: row; flex-wrap: wrap; gap: 10px; }
-            .lb-desc { width: 100%; }
+        @media (max-width: 700px) {
+            .photo-grid { grid-template-columns: 1fr; gap: 2px; }
+            .photo-card.featured img { aspect-ratio: 3/2; }
+            .lb-stage { padding: 0 52px; }
         }
-        @media (max-width: 520px) {
-            .photo-grid { columns: 2 120px; column-gap: 6px; }
-            .photo-grid .photo-item { margin-bottom: 6px; }
-            .lb-arrow { display: none; }
-            .hero-title { font-size: 1.5rem; }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.6rem; }
+            .lb-meta-strip { gap: 12px; }
+            .lb-stage { padding: 0 40px; }
         }
     </style>
 </head>
 <body>
 
 <nav class="nav">
-    <div class="nav-logo"><a href="index.html">Macle<em>.</em>dev</a></div>
+    <a href="index.html" class="nav-logo">Macle<em>.</em>dev</a>
     <div class="nav-links">
         <a href="index.html" data-zh="首页" data-en="Home">首页</a>
         <a href="blog.html" data-zh="博客" data-en="Blog">博客</a>
@@ -265,39 +283,40 @@
 
 <div class="page-wrap">
 
-    <!-- Hero -->
     <div class="hero">
         <h1 class="hero-title" data-zh="摄影" data-en="Photography">摄影</h1>
-        <p class="hero-sub" data-zh="用镜头记录生活，定格每一个值得珍藏的瞬间" data-en="Capturing life through the lens, preserving moments worth keeping">用镜头记录生活，定格每一个值得珍藏的瞬间</p>
+        <p class="hero-sub" data-zh="用镜头记录生活，定格每一个值得珍藏的瞬间" data-en="Capturing life through the lens">用镜头记录生活，定格每一个值得珍藏的瞬间</p>
         <div class="hero-stats" id="heroStats"></div>
     </div>
 
-    <!-- Filter Tags -->
     <div class="filter-bar" id="filterBar"></div>
-
-    <!-- Timeline -->
     <div id="timeline"></div>
 
-    <!-- Empty State -->
     <div class="empty-state" id="emptyState">
         <div class="empty-icon">📷</div>
         <div class="empty-title" data-zh="还没有照片" data-en="No photos yet">还没有照片</div>
-        <p class="empty-hint" data-zh="快去拍摄吧，使用 <a href='photo-editor.html'>照片编辑器</a> 发布第一张" data-en="Start shooting and publish with <a href='photo-editor.html'>Photo Editor</a>">快去拍摄吧，使用 <a href="photo-editor.html">照片编辑器</a> 发布第一张</p>
+        <p class="empty-hint">使用 <a href="photo-editor.html">照片编辑器</a> 发布第一张</p>
     </div>
 
 </div>
 
 <!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="lbBgClick(event)">
-    <button class="lb-close" onclick="closeLightbox()">✕</button>
-    <button class="lb-arrow lb-prev" id="lbPrev" onclick="lbNav(-1)">‹</button>
-    <button class="lb-arrow lb-next" id="lbNext" onclick="lbNav(1)">›</button>
-    <div class="lb-content">
-        <div class="lb-img-wrap">
-            <img class="lb-img" id="lbImg" alt="" onclick="event.stopPropagation()">
+<div class="lightbox" id="lightbox">
+    <div class="lb-bar">
+        <div class="lb-bar-left">
+            <span class="lb-counter" id="lbCounter"></span>
+            <span class="lb-desc-bar" id="lbDescBar"></span>
         </div>
-        <div class="lb-info" onclick="event.stopPropagation()" id="lbInfo"></div>
+        <button class="lb-close" onclick="closeLightbox()">✕</button>
     </div>
+    <div class="lb-stage">
+        <button class="lb-nav lb-prev" id="lbPrev" onclick="lbNav(-1)">‹</button>
+        <div class="lb-img-wrap">
+            <img class="lb-img" id="lbImg" alt="">
+        </div>
+        <button class="lb-nav lb-next" id="lbNext" onclick="lbNav(1)">›</button>
+    </div>
+    <div class="lb-meta-strip" id="lbMetaStrip"></div>
 </div>
 
 <footer>
@@ -306,7 +325,6 @@
 
 <script src="js/photos.js"></script>
 <script>
-// ── Lang / Theme ─────────────────────────────────────────────────────────────
 const LANG_KEY  = 'macle_lang';
 const THEME_KEY = 'macle_theme';
 let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
@@ -316,11 +334,12 @@ function setLang(lang) {
     localStorage.setItem(LANG_KEY, lang);
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
     document.querySelectorAll('[data-zh]').forEach(el => {
-        const val = el.getAttribute('data-' + lang);
-        if (val !== null) el.innerHTML = val;
+        const v = el.getAttribute('data-' + lang);
+        if (v !== null) el.innerHTML = v;
     });
     document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    render();
 }
 
 function initTheme() {
@@ -329,92 +348,64 @@ function initTheme() {
     document.getElementById('themeBtn').textContent = saved === 'dark' ? '🌙' : '☀️';
 }
 function toggleTheme() {
-    const cur  = document.documentElement.getAttribute('data-theme');
+    const cur = document.documentElement.getAttribute('data-theme');
     const next = cur === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem(THEME_KEY, next);
     document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
 }
 
-// ── Data helpers ─────────────────────────────────────────────────────────────
-const photos = typeof PHOTOS !== 'undefined' ? PHOTOS : [];
-
-function fmtDate(str) {
-    const d = new Date(str);
-    if (currentLang === 'en') return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
-}
+// ── Data ──────────────────────────────────────────────────────────────────────
+const photos = (typeof PHOTOS !== 'undefined' ? PHOTOS : [])
+    .slice()
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
 const MONTH_ZH = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
 
 function groupPhotos(list) {
     const map = {};
     list.forEach(p => {
-        const d   = new Date(p.date);
-        const yr  = d.getFullYear();
-        const mo  = d.getMonth(); // 0-based
-        const key = `${yr}-${String(mo+1).padStart(2,'0')}`;
+        const d  = new Date(p.date);
+        const yr = d.getFullYear();
+        const mo = d.getMonth();
         if (!map[yr]) map[yr] = {};
+        const key = mo;
         if (!map[yr][key]) map[yr][key] = { year: yr, month: mo, photos: [] };
         map[yr][key].photos.push(p);
     });
-    // sort years desc, months desc
-    return Object.keys(map).sort((a,b) => b-a).map(yr => ({
+    return Object.keys(map).sort((a,b)=>b-a).map(yr => ({
         year: yr,
-        months: Object.keys(map[yr]).sort((a,b) => b.localeCompare(a)).map(k => map[yr][k])
+        months: Object.keys(map[yr]).sort((a,b)=>b-a).map(k => map[yr][k])
     }));
 }
 
-// ── Render gallery ────────────────────────────────────────────────────────────
-let activeTag    = '';
-let currentIndex = 0;
+// ── Render ────────────────────────────────────────────────────────────────────
+let activeTag     = '';
 let visiblePhotos = [];
 
-function getAllTags() {
-    const set = new Set();
-    photos.forEach(p => (p.tags || []).forEach(t => set.add(t)));
-    return [...set];
-}
-
-function renderStats() {
-    const total     = photos.length;
-    const locations = [...new Set(photos.map(p => p.location).filter(Boolean))];
-    const cameras   = [...new Set(photos.map(p => p.camera).filter(Boolean))];
-    const statsEl   = document.getElementById('heroStats');
-    if (!total) { statsEl.innerHTML = ''; return; }
-    statsEl.innerHTML = `
-        <div class="stat-item"><span class="stat-num">${total}</span><span class="stat-label">${currentLang==='zh'?'张照片':'Photos'}</span></div>
-        ${locations.length ? `<div class="stat-item"><span class="stat-num">${locations.length}</span><span class="stat-label">${currentLang==='zh'?'个地点':'Locations'}</span></div>` : ''}
-        ${cameras.length ? `<div class="stat-item"><span class="stat-num">${cameras.length}</span><span class="stat-label">${currentLang==='zh'?'台相机':'Cameras'}</span></div>` : ''}
-    `;
-}
-
-function renderFilterBar() {
-    const tags  = getAllTags();
-    const barEl = document.getElementById('filterBar');
-    if (!tags.length) { barEl.innerHTML = ''; return; }
-    const allLabel = currentLang === 'zh' ? '全部' : 'All';
-    barEl.innerHTML = `<button class="filter-tag ${activeTag===''?'active':''}" onclick="setTag('')">${allLabel}</button>` +
-        tags.map(t => `<button class="filter-tag ${activeTag===t?'active':''}" onclick="setTag('${escAttr(t)}')">${escHtml(t)}</button>`).join('');
-}
-
-function setTag(tag) {
-    activeTag = tag;
-    render();
-}
-
 function render() {
-    renderStats();
-    renderFilterBar();
+    // Stats
+    const total     = photos.length;
+    const locations = [...new Set(photos.map(p=>p.location).filter(Boolean))];
+    const statsEl   = document.getElementById('heroStats');
+    statsEl.innerHTML = total ? `
+        <div><div class="stat-num">${total}</div><div class="stat-label">${currentLang==='zh'?'张照片':'Photos'}</div></div>
+        ${locations.length?`<div><div class="stat-num">${locations.length}</div><div class="stat-label">${currentLang==='zh'?'个地点':'Locations'}</div></div>`:''}
+    ` : '';
 
-    const filtered = activeTag
-        ? photos.filter(p => (p.tags || []).includes(activeTag))
-        : photos;
+    // Filter tags
+    const allTags = [...new Set(photos.flatMap(p=>p.tags||[]))];
+    const barEl = document.getElementById('filterBar');
+    barEl.innerHTML = allTags.length ? [
+        `<button class="filter-tag ${activeTag===''?'active':''}" onclick="setTag('')">${currentLang==='zh'?'全部':'All'}</button>`,
+        ...allTags.map(t=>`<button class="filter-tag ${activeTag===t?'active':''}" onclick="setTag('${escAttr(t)}')">${escHtml(t)}</button>`)
+    ].join('') : '';
 
-    visiblePhotos = [...filtered].sort((a,b) => new Date(b.date)-new Date(a.date));
+    // Filter
+    visiblePhotos = activeTag ? photos.filter(p=>(p.tags||[]).includes(activeTag)) : photos;
 
-    const timelineEl  = document.getElementById('timeline');
-    const emptyEl     = document.getElementById('emptyState');
+    const timelineEl = document.getElementById('timeline');
+    const emptyEl    = document.getElementById('emptyState');
 
     if (!visiblePhotos.length) {
         timelineEl.innerHTML = '';
@@ -431,21 +422,29 @@ function render() {
                 <div class="year-line"></div>
             </div>
             ${g.months.map(m => {
-                const monthName = currentLang === 'zh' ? MONTH_ZH[m.month]+'月' : new Date(m.year,m.month,1).toLocaleDateString('en-US',{month:'long'});
+                const moLabel = currentLang === 'zh'
+                    ? MONTH_ZH[m.month] + '月'
+                    : new Date(m.year, m.month, 1).toLocaleDateString('en-US', {month:'long'});
                 return `
                 <div class="month-group">
-                    <div class="month-label">${monthName} <span class="month-count">· ${m.photos.length}</span></div>
+                    <div class="month-label">${moLabel} · ${m.photos.length}</div>
                     <div class="photo-grid">
-                        ${m.photos.map(p => {
-                            const idx = visiblePhotos.indexOf(p);
-                            const metaParts = [p.aperture, p.shutter, p.iso ? 'ISO '+p.iso : ''].filter(Boolean);
+                        ${m.photos.map((p, i) => {
+                            const idx  = visiblePhotos.indexOf(p);
+                            const feat = i === 0 && m.photos.length >= 3 ? ' featured' : '';
+                            const metaParts = [p.aperture, p.shutter, p.iso?'ISO '+p.iso:''].filter(Boolean);
                             return `
-                            <div class="photo-item" onclick="openLightbox(${idx})" data-idx="${idx}">
-                                <img src="${escAttr(p.src)}" alt="${escAttr(p.description||'')}" loading="lazy"
-                                     onerror="this.parentElement.style.display='none'">
-                                <div class="photo-overlay">
-                                    <div class="overlay-desc">${escHtml(p.description||'')}</div>
-                                    ${metaParts.length ? `<div class="overlay-meta">${metaParts.map(s=>`<span>${escHtml(s)}</span>`).join('')}</div>` : ''}
+                            <div class="photo-card${feat}" onclick="openLightbox(${idx})">
+                                <img src="${escAttr(p.src)}"
+                                     alt="${escAttr(p.description||'')}"
+                                     loading="lazy"
+                                     onerror="this.closest('.photo-card').style.display='none'">
+                                <div class="photo-caption">
+                                    <div class="caption-left">
+                                        <span class="caption-desc">${escHtml(p.description||'')}</span>
+                                        ${p.location ? `<span class="caption-loc">📍 ${escHtml(p.location)}</span>` : ''}
+                                    </div>
+                                    ${metaParts.length ? `<div class="caption-right">${metaParts.map(s=>`<span class="caption-meta">${escHtml(s)}</span>`).join('')}</div>` : ''}
                                 </div>
                             </div>`;
                         }).join('')}
@@ -455,90 +454,78 @@ function render() {
         </div>`).join('');
 }
 
+function setTag(tag) { activeTag = tag; render(); }
+
 // ── Lightbox ─────────────────────────────────────────────────────────────────
+let currentIdx = 0;
+
 function openLightbox(idx) {
-    currentIndex = idx;
+    currentIdx = idx;
     updateLightbox();
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
-
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
     document.body.style.overflow = '';
 }
-
-function lbBgClick(e) {
-    if (e.target === document.getElementById('lightbox')) closeLightbox();
-}
-
 function lbNav(dir) {
-    const next = currentIndex + dir;
+    const next = currentIdx + dir;
     if (next < 0 || next >= visiblePhotos.length) return;
-    currentIndex = next;
+    currentIdx = next;
     updateLightbox();
 }
-
 function updateLightbox() {
-    const p   = visiblePhotos[currentIndex];
-    const img = document.getElementById('lbImg');
-    img.src = p.src;
-    img.alt = p.description || '';
+    const p = visiblePhotos[currentIdx];
+    document.getElementById('lbImg').src    = p.src;
+    document.getElementById('lbImg').alt    = p.description || '';
+    document.getElementById('lbCounter').textContent = `${currentIdx+1} / ${visiblePhotos.length}`;
+    document.getElementById('lbDescBar').textContent = p.description || '';
+    document.getElementById('lbPrev').disabled = currentIdx === 0;
+    document.getElementById('lbNext').disabled = currentIdx === visiblePhotos.length - 1;
 
-    document.getElementById('lbPrev').disabled = currentIndex === 0;
-    document.getElementById('lbNext').disabled = currentIndex === visiblePhotos.length - 1;
-
-    const metaItems = [
-        p.aperture    ? { key: currentLang==='zh'?'光圈':'Aperture',   val: p.aperture }    : null,
-        p.shutter     ? { key: currentLang==='zh'?'快门':'Shutter',    val: p.shutter }     : null,
-        p.iso         ? { key: 'ISO',                                   val: p.iso }         : null,
-        p.focalLength ? { key: currentLang==='zh'?'焦距':'Focal Len',  val: p.focalLength } : null,
+    // Meta strip
+    const metaDefs = [
+        p.camera      ? { key: currentLang==='zh'?'相机':'Camera',    val: p.camera }      : null,
+        p.lens        ? { key: currentLang==='zh'?'镜头':'Lens',      val: p.lens }        : null,
+        p.aperture    ? { key: currentLang==='zh'?'光圈':'Aperture',  val: p.aperture }    : null,
+        p.shutter     ? { key: currentLang==='zh'?'快门':'Shutter',   val: p.shutter }     : null,
+        p.iso         ? { key: 'ISO',                                  val: p.iso }         : null,
+        p.focalLength ? { key: currentLang==='zh'?'焦距':'Focal',     val: p.focalLength } : null,
+        p.location    ? { key: currentLang==='zh'?'地点':'Location',  val: p.location }    : null,
+        p.date        ? { key: currentLang==='zh'?'日期':'Date',      val: p.date }        : null,
     ].filter(Boolean);
 
-    document.getElementById('lbInfo').innerHTML = `
-        <div class="lb-desc">${escHtml(p.description||'')}</div>
-        <div class="lb-date-loc">
-            ${p.location ? `<span>📍 ${escHtml(p.location)}</span>` : ''}
-            <span>📅 ${fmtDate(p.date)}</span>
-        </div>
-        ${p.camera || p.lens ? `
-        <div class="lb-camera-full">
-            <div class="cam-label">${currentLang==='zh'?'相机':'Camera'}</div>
-            ${p.camera ? `<div>${escHtml(p.camera)}</div>` : ''}
-            ${p.lens ? `<div style="color:rgba(255,255,255,.45);font-size:.75rem;margin-top:2px">${escHtml(p.lens)}</div>` : ''}
-        </div>` : ''}
-        ${metaItems.length ? `
-        <div class="lb-meta-grid">
-            ${metaItems.map(m => `
+    document.getElementById('lbMetaStrip').innerHTML = metaDefs.length
+        ? metaDefs.map((m, i) => `
+            ${i > 0 ? '<div class="lb-meta-sep"></div>' : ''}
             <div class="lb-meta-item">
-                <div class="lb-meta-key">${m.key}</div>
-                <div class="lb-meta-val">${escHtml(String(m.val))}</div>
-            </div>`).join('')}
-        </div>` : ''}
-        ${(p.tags||[]).length ? `
-        <div class="lb-tags">
-            ${p.tags.map(t=>`<span class="lb-tag">${escHtml(t)}</span>`).join('')}
-        </div>` : ''}
-        <div class="lb-counter">${currentIndex+1} / ${visiblePhotos.length}</div>
-    `;
+                <span class="lb-meta-key">${m.key}</span>
+                <span class="lb-meta-val">${escHtml(String(m.val))}</span>
+            </div>`).join('')
+        : `<div class="lb-meta-item"><span class="lb-meta-val" style="color:rgba(255,255,255,0.3)">${p.date||''}</span></div>`;
 }
 
-// ── Keyboard ──────────────────────────────────────────────────────────────────
+// keyboard
 document.addEventListener('keydown', e => {
     if (!document.getElementById('lightbox').classList.contains('open')) return;
-    if (e.key === 'Escape')      closeLightbox();
-    if (e.key === 'ArrowLeft')   lbNav(-1);
-    if (e.key === 'ArrowRight')  lbNav(1);
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  lbNav(-1);
+    if (e.key === 'ArrowRight') lbNav(1);
 });
 
-// ── Utils ─────────────────────────────────────────────────────────────────────
+// close on backdrop
+document.getElementById('lightbox').addEventListener('click', e => {
+    if (e.target === document.getElementById('lightbox') ||
+        e.target.classList.contains('lb-stage') ||
+        e.target.classList.contains('lb-img-wrap')) closeLightbox();
+});
+
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
 initTheme();
 setLang(currentLang);
-render();
 </script>
 </body>
 </html>
