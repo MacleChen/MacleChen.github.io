@@ -165,6 +165,57 @@
         .empty-hint { font-size: 0.85rem; }
         .empty-hint a { color: var(--accent); }
 
+        /* ── SKELETON SHIMMER ── */
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .img-skeleton {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg,
+                var(--bg-card) 25%,
+                rgba(255,255,255,0.055) 50%,
+                var(--bg-card) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s ease-in-out infinite;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        /* ── FADE-IN for new cards ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .photo-card.new { animation: fadeUp 0.4s ease forwards; }
+
+        /* ── LOAD MORE ── */
+        .load-more-wrap {
+            display: none;
+            text-align: center;
+            padding: 12px 0 72px;
+        }
+        .load-more-btn {
+            padding: 10px 36px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-radius: 24px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+        .load-more-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .load-more-btn:disabled { opacity: 0.35; cursor: default; }
+        .load-more-info {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
         /* ── LIGHTBOX ── */
         .lightbox {
             position: fixed; inset: 0; z-index: 500;
@@ -295,6 +346,14 @@
         <p class="empty-hint">使用 <a href="photo-editor.html">照片编辑器</a> 发布第一张</p>
     </div>
 
+    <!-- 加载更多 -->
+    <div class="load-more-wrap" id="loadMoreWrap">
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">加载更多</button>
+        <p class="load-more-info" id="loadMoreInfo"></p>
+    </div>
+    <!-- 滚动哨兵：进入视口时自动加载 -->
+    <div id="sentinel" style="height:1px"></div>
+
 </div>
 
 <!-- Lightbox -->
@@ -324,6 +383,7 @@
 <script>
 const LANG_KEY  = 'macle_lang';
 const THEME_KEY = 'macle_theme';
+const PAGE_SIZE = 4;
 let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
 
 function setLang(lang) {
@@ -354,8 +414,7 @@ function toggleTheme() {
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const photos = (typeof PHOTOS !== 'undefined' ? PHOTOS : [])
-    .slice()
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+    .slice().sort((a, b) => new Date(b.date) - new Date(a.date));
 
 const MONTH_ZH = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
 
@@ -366,9 +425,8 @@ function groupPhotos(list) {
         const yr = d.getFullYear();
         const mo = d.getMonth();
         if (!map[yr]) map[yr] = {};
-        const key = mo;
-        if (!map[yr][key]) map[yr][key] = { year: yr, month: mo, photos: [] };
-        map[yr][key].photos.push(p);
+        if (!map[yr][mo]) map[yr][mo] = { year: yr, month: mo, photos: [] };
+        map[yr][mo].photos.push(p);
     });
     return Object.keys(map).sort((a,b)=>b-a).map(yr => ({
         year: yr,
@@ -376,42 +434,56 @@ function groupPhotos(list) {
     }));
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
+// ── Pagination state ──────────────────────────────────────────────────────────
 let activeTag     = '';
-let visiblePhotos = [];
+let visiblePhotos = [];   // full filtered list (used by lightbox)
+let loadedCount   = PAGE_SIZE;
+let prevCount     = 0;
+let ioObserver    = null;
 
+// ── Render entry ─────────────────────────────────────────────────────────────
 function render() {
     // Stats
     const total     = photos.length;
     const locations = [...new Set(photos.map(p=>p.location).filter(Boolean))];
-    const statsEl   = document.getElementById('heroStats');
-    statsEl.innerHTML = total ? `
+    document.getElementById('heroStats').innerHTML = total ? `
         <div><div class="stat-num">${total}</div><div class="stat-label">${currentLang==='zh'?'张照片':'Photos'}</div></div>
         ${locations.length?`<div><div class="stat-num">${locations.length}</div><div class="stat-label">${currentLang==='zh'?'个地点':'Locations'}</div></div>`:''}
     ` : '';
 
     // Filter tags
     const allTags = [...new Set(photos.flatMap(p=>p.tags||[]))];
-    const barEl = document.getElementById('filterBar');
-    barEl.innerHTML = allTags.length ? [
+    document.getElementById('filterBar').innerHTML = allTags.length ? [
         `<button class="filter-tag ${activeTag===''?'active':''}" onclick="setTag('')">${currentLang==='zh'?'全部':'All'}</button>`,
         ...allTags.map(t=>`<button class="filter-tag ${activeTag===t?'active':''}" onclick="setTag('${escAttr(t)}')">${escHtml(t)}</button>`)
     ].join('') : '';
 
-    // Filter
+    // Reset pagination on each full render
     visiblePhotos = activeTag ? photos.filter(p=>(p.tags||[]).includes(activeTag)) : photos;
+    loadedCount   = PAGE_SIZE;
+    prevCount     = 0;
 
+    renderPhotos();
+}
+
+function setTag(tag) { activeTag = tag; render(); }
+
+// ── Render current page ───────────────────────────────────────────────────────
+function renderPhotos() {
     const timelineEl = document.getElementById('timeline');
     const emptyEl    = document.getElementById('emptyState');
 
     if (!visiblePhotos.length) {
         timelineEl.innerHTML = '';
         emptyEl.style.display = 'block';
+        setLoadMoreUI(false);
         return;
     }
     emptyEl.style.display = 'none';
 
-    const groups = groupPhotos(visiblePhotos);
+    const slice  = visiblePhotos.slice(0, loadedCount);
+    const groups = groupPhotos(slice);
+
     timelineEl.innerHTML = groups.map(g => `
         <div class="year-group">
             <div class="year-divider">
@@ -426,25 +498,29 @@ function render() {
                 <div class="month-group">
                     <div class="month-label">${moLabel} · ${m.photos.length}</div>
                     <div class="photo-grid">
-                        ${m.photos.map((p, i) => {
-                            const idx  = visiblePhotos.indexOf(p);
-                            const metaParts = [p.aperture, p.shutter, p.iso?'ISO '+p.iso:''].filter(Boolean);
+                        ${m.photos.map(p => {
+                            const idx   = visiblePhotos.indexOf(p);
+                            const isNew = idx >= prevCount;
+                            const meta  = [p.location ? '📍 '+escHtml(p.location) : '', p.date||''].filter(Boolean).join(' · ');
                             return `
-                            <div class="photo-card" onclick="openLightbox(${idx})">
+                            <div class="photo-card${isNew?' new':''}" onclick="openLightbox(${idx})">
                                 <div class="photo-img-wrap">
                                     <img src="${escAttr(p.src)}"
                                          alt="${escAttr(p.description||'')}"
                                          loading="lazy"
-                                         onerror="this.style.display='none';this.nextElementSibling.classList.add('visible')">
+                                         decoding="async"
+                                         onload="imgLoaded(this)"
+                                         onerror="imgError(this)">
+                                    <div class="img-skeleton"></div>
                                     <div class="heic-banner">
                                         <span>🖼</span>
                                         <div>${escHtml(p.description||'')}</div>
-                                        <div style="font-size:0.72rem;opacity:0.55">HEIC 格式 · 点击在灯箱中查看</div>
+                                        <div style="font-size:0.72rem;opacity:0.55">HEIC 格式 · 点击灯箱查看</div>
                                     </div>
                                 </div>
                                 <div class="photo-caption">
                                     <span class="caption-desc">${escHtml(p.description||'')}</span>
-                                    <span class="caption-meta-right">${[p.location ? '📍 '+escHtml(p.location) : '', p.date||''].filter(Boolean).join(' · ')}</span>
+                                    <span class="caption-meta-right">${meta}</span>
                                 </div>
                             </div>`;
                         }).join('')}
@@ -452,9 +528,50 @@ function render() {
                 </div>`;
             }).join('')}
         </div>`).join('');
+
+    setLoadMoreUI(loadedCount < visiblePhotos.length);
+    resetObserver();
 }
 
-function setTag(tag) { activeTag = tag; render(); }
+// ── Image callbacks ───────────────────────────────────────────────────────────
+function imgLoaded(img) {
+    const sk = img.parentElement.querySelector('.img-skeleton');
+    if (sk) sk.style.display = 'none';
+}
+function imgError(img) {
+    img.style.display = 'none';
+    const sk = img.parentElement.querySelector('.img-skeleton');
+    if (sk) sk.style.display = 'none';
+    const banner = img.parentElement.querySelector('.heic-banner');
+    if (banner) banner.classList.add('visible');
+}
+
+// ── Load more ─────────────────────────────────────────────────────────────────
+function loadMore() {
+    if (loadedCount >= visiblePhotos.length) return;
+    prevCount   = loadedCount;
+    loadedCount = Math.min(loadedCount + PAGE_SIZE, visiblePhotos.length);
+    renderPhotos();
+}
+
+function setLoadMoreUI(hasMore) {
+    const wrap = document.getElementById('loadMoreWrap');
+    const info = document.getElementById('loadMoreInfo');
+    wrap.style.display = hasMore ? 'block' : 'none';
+    if (hasMore) info.textContent = `已加载 ${loadedCount} / ${visiblePhotos.length} 张`;
+}
+
+// ── IntersectionObserver (auto-load on scroll) ────────────────────────────────
+function resetObserver() {
+    if (ioObserver) { ioObserver.disconnect(); ioObserver = null; }
+    if (loadedCount >= visiblePhotos.length) return;
+    const sentinel = document.getElementById('sentinel');
+    if (!sentinel) return;
+    ioObserver = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) loadMore();
+    }, { rootMargin: '300px' });
+    ioObserver.observe(sentinel);
+}
 
 // ── Lightbox ─────────────────────────────────────────────────────────────────
 let currentIdx = 0;
@@ -479,21 +596,20 @@ function updateLightbox() {
     const p = visiblePhotos[currentIdx];
     document.getElementById('lbImg').src    = p.src;
     document.getElementById('lbImg').alt    = p.description || '';
-    document.getElementById('lbCounter').textContent = `${currentIdx+1} / ${visiblePhotos.length}`;
-    document.getElementById('lbDescBar').textContent = p.description || '';
+    document.getElementById('lbCounter').textContent  = `${currentIdx+1} / ${visiblePhotos.length}`;
+    document.getElementById('lbDescBar').textContent  = p.description || '';
     document.getElementById('lbPrev').disabled = currentIdx === 0;
     document.getElementById('lbNext').disabled = currentIdx === visiblePhotos.length - 1;
 
-    // Meta strip
     const metaDefs = [
-        p.camera      ? { key: currentLang==='zh'?'相机':'Camera',    val: p.camera }      : null,
-        p.lens        ? { key: currentLang==='zh'?'镜头':'Lens',      val: p.lens }        : null,
-        p.aperture    ? { key: currentLang==='zh'?'光圈':'Aperture',  val: p.aperture }    : null,
-        p.shutter     ? { key: currentLang==='zh'?'快门':'Shutter',   val: p.shutter }     : null,
-        p.iso         ? { key: 'ISO',                                  val: p.iso }         : null,
-        p.focalLength ? { key: currentLang==='zh'?'焦距':'Focal',     val: p.focalLength } : null,
-        p.location    ? { key: currentLang==='zh'?'地点':'Location',  val: p.location }    : null,
-        p.date        ? { key: currentLang==='zh'?'日期':'Date',      val: p.date }        : null,
+        p.camera      ? { key: currentLang==='zh'?'相机':'Camera',   val: p.camera }      : null,
+        p.lens        ? { key: currentLang==='zh'?'镜头':'Lens',     val: p.lens }        : null,
+        p.aperture    ? { key: currentLang==='zh'?'光圈':'Aperture', val: p.aperture }    : null,
+        p.shutter     ? { key: currentLang==='zh'?'快门':'Shutter',  val: p.shutter }     : null,
+        p.iso         ? { key: 'ISO',                                 val: p.iso }         : null,
+        p.focalLength ? { key: currentLang==='zh'?'焦距':'Focal',    val: p.focalLength } : null,
+        p.location    ? { key: currentLang==='zh'?'地点':'Location', val: p.location }    : null,
+        p.date        ? { key: currentLang==='zh'?'日期':'Date',     val: p.date }        : null,
     ].filter(Boolean);
 
     document.getElementById('lbMetaStrip').innerHTML = metaDefs.length
@@ -506,15 +622,12 @@ function updateLightbox() {
         : `<div class="lb-meta-item"><span class="lb-meta-val" style="color:rgba(255,255,255,0.3)">${p.date||''}</span></div>`;
 }
 
-// keyboard
 document.addEventListener('keydown', e => {
     if (!document.getElementById('lightbox').classList.contains('open')) return;
     if (e.key === 'Escape')     closeLightbox();
     if (e.key === 'ArrowLeft')  lbNav(-1);
     if (e.key === 'ArrowRight') lbNav(1);
 });
-
-// close on backdrop
 document.getElementById('lightbox').addEventListener('click', e => {
     if (e.target === document.getElementById('lightbox') ||
         e.target.classList.contains('lb-stage') ||
