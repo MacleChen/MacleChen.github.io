@@ -82,9 +82,9 @@
 
         /* ── PHOTO GRID ── */
         .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         /* ── PHOTO CARD ── */
@@ -93,54 +93,54 @@
             cursor: pointer;
             overflow: hidden;
             background: #0a0a0a;
+            border-radius: 6px;
         }
 
-        /* Image */
+        /* Image — full width, 16:9 crop */
         .photo-card img {
             display: block;
             width: 100%;
-            height: 100%;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
-            aspect-ratio: 3 / 2;
-            transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.3s;
+            transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
         }
-        .photo-card:hover img { transform: scale(1.03); }
+        .photo-card:hover img { transform: scale(1.025); }
 
-        /* Bottom gradient + caption */
+        /* Caption — always visible, overlaid at bottom-left */
         .photo-caption {
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            padding: 48px 16px 14px;
+            padding: 52px 20px 16px;
             background: linear-gradient(to top,
-                rgba(0,0,0,0.72) 0%,
-                rgba(0,0,0,0.3) 55%,
+                rgba(0,0,0,0.6) 0%,
+                rgba(0,0,0,0.18) 60%,
                 transparent 100%);
             display: flex;
-            justify-content: space-between;
             align-items: flex-end;
-            gap: 12px;
-            opacity: 0;
-            transform: translateY(6px);
-            transition: opacity 0.28s ease, transform 0.28s ease;
+            justify-content: space-between;
+            gap: 16px;
+            pointer-events: none;
         }
-        .photo-card:hover .photo-caption { opacity: 1; transform: translateY(0); }
 
         .caption-left { min-width: 0; }
         .caption-desc {
             display: block;
-            font-size: 0.82rem;
-            font-weight: 500;
-            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.92);
             line-height: 1.4;
+            letter-spacing: 0.15px;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
         .caption-loc {
             display: block;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.55);
-            margin-top: 2px;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 3px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
         .caption-right {
             flex-shrink: 0;
@@ -148,19 +148,12 @@
         }
         .caption-meta {
             font-size: 0.68rem;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.38);
             font-family: ui-monospace, 'SF Mono', monospace;
-            line-height: 1.6;
+            line-height: 1.7;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
         .caption-meta span { display: block; }
-
-        /* First item in a group spans full width */
-        .photo-card.featured {
-            grid-column: 1 / -1;
-        }
-        .photo-card.featured img {
-            aspect-ratio: 16 / 7;
-        }
 
         /* ── EMPTY STATE ── */
         .empty-state { display: none; text-align: center; padding: 100px 20px; color: var(--text-muted); }
@@ -246,20 +239,19 @@
         [data-theme="light"] { --bg:#f5f5f5; --bg-card:#fff; --border:rgba(0,0,0,.1); --text:#1a1a1a; --text-muted:#666; --accent:#0969da; }
         [data-theme="light"] .nav { background: rgba(245,245,245,0.96); }
         [data-theme="light"] .theme-btn { background: rgba(0,0,0,0.04); }
-        [data-theme="light"] .photo-grid { gap: 3px; background: #ddd; }
         [data-theme="light"] .lightbox { background: rgba(0,0,0,0.95); }
         [data-theme="light"] .year-label { color: var(--text); }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 700px) {
-            .photo-grid { grid-template-columns: 1fr; gap: 2px; }
-            .photo-card.featured img { aspect-ratio: 3/2; }
+            .photo-card img { aspect-ratio: 4/3; }
             .lb-stage { padding: 0 52px; }
         }
         @media (max-width: 480px) {
             .hero-title { font-size: 1.6rem; }
             .lb-meta-strip { gap: 12px; }
             .lb-stage { padding: 0 40px; }
+            .caption-desc { font-size: 0.82rem; }
         }
     </style>
 </head>
@@ -431,10 +423,9 @@ function render() {
                     <div class="photo-grid">
                         ${m.photos.map((p, i) => {
                             const idx  = visiblePhotos.indexOf(p);
-                            const feat = i === 0 && m.photos.length >= 3 ? ' featured' : '';
                             const metaParts = [p.aperture, p.shutter, p.iso?'ISO '+p.iso:''].filter(Boolean);
                             return `
-                            <div class="photo-card${feat}" onclick="openLightbox(${idx})">
+                            <div class="photo-card" onclick="openLightbox(${idx})">
                                 <img src="${escAttr(p.src)}"
                                      alt="${escAttr(p.description||'')}"
                                      loading="lazy"
