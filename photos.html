@@ -130,24 +130,33 @@
 
         /* Caption — below the image */
         .photo-caption {
-            padding: 14px 2px 0;
+            padding: 12px 2px 0;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
         }
 
         .caption-desc {
-            display: block;
             font-size: 0.9rem;
             font-weight: 400;
             color: var(--text);
             line-height: 1.5;
             letter-spacing: 0.1px;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .caption-loc {
-            display: block;
+        .caption-meta-right {
+            flex-shrink: 0;
             font-size: 0.78rem;
             color: var(--text-muted);
-            margin-top: 5px;
+            text-align: right;
+            white-space: nowrap;
         }
-        .caption-right { display: none; } /* hide EXIF in list, visible in lightbox */
+        .caption-loc { display: none; } /* merged into caption-meta-right */
 
         /* ── EMPTY STATE ── */
         .empty-state { display: none; text-align: center; padding: 100px 20px; color: var(--text-muted); }
@@ -435,8 +444,7 @@ function render() {
                                 </div>
                                 <div class="photo-caption">
                                     <span class="caption-desc">${escHtml(p.description||'')}</span>
-                                    ${p.location ? `<span class="caption-loc">📍 ${escHtml(p.location)}</span>` : ''}
-                                    ${p.date ? `<span class="caption-loc">${p.date}</span>` : ''}
+                                    <span class="caption-meta-right">${[p.location ? '📍 '+escHtml(p.location) : '', p.date||''].filter(Boolean).join(' · ')}</span>
                                 </div>
                             </div>`;
                         }).join('')}
