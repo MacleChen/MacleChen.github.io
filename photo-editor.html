@@ -8,6 +8,8 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <!-- exifr: 轻量级 EXIF 读取库 -->
     <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/lite.umd.js"></script>
+    <!-- heic2any: HEIC/HEIF → JPEG 转换 -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
     <script src="js/photos.js"></script>
     <style>
         :root {
@@ -308,6 +310,20 @@ function onFileChange(e) {
 }
 
 async function loadFile(file) {
+    // Auto-convert HEIC/HEIF → JPEG (iPhone default format)
+    const isHeic = file.type === 'image/heic' || file.type === 'image/heif'
+        || /\.(heic|heif)$/i.test(file.name)
+        || (file.type === '' && file.size > 0); // type may be empty on some browsers
+    if (isHeic || file.type === '') {
+        try {
+            showToast('检测到 HEIC 格式，转换中…', 'info');
+            const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+            file = new File([blob], file.name.replace(/\.(heic|heif)$/i, '.jpg') || 'photo.jpg', { type: 'image/jpeg' });
+            showToast('已转换为 JPEG', 'ok');
+        } catch(e) {
+            // Not actually HEIC or heic2any failed — proceed with original
+        }
+    }
     selectedFile = file;
 
     // Show preview
