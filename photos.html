@@ -84,76 +84,70 @@
         .photo-grid {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 0;
         }
 
         /* ── PHOTO CARD ── */
         .photo-card {
-            position: relative;
             cursor: pointer;
-            overflow: hidden;
-            background: #0a0a0a;
-            border-radius: 6px;
+            padding-bottom: 48px;    /* generous white space between photos */
         }
 
-        /* Image — full width, 16:9 crop */
-        .photo-card img {
+        /* Image wrapper — overflow hidden only on image, not the whole card */
+        .photo-img-wrap {
+            overflow: hidden;
+            border-radius: 6px;
+            background: #0d0d0d;
+            position: relative;
+        }
+
+        .photo-img-wrap img {
             display: block;
             width: 100%;
             aspect-ratio: 16 / 9;
             object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
         }
-        .photo-card:hover img { transform: scale(1.025); }
+        .photo-card:hover .photo-img-wrap img { transform: scale(1.025); }
 
-        /* Caption — always visible, overlaid at bottom-left */
+        /* HEIC fallback banner (shown when img fails) */
+        .heic-banner {
+            display: none;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            border-radius: 6px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+        .heic-banner.visible { display: flex; }
+        .heic-banner span { font-size: 1.6rem; opacity: 0.4; }
+
+        /* Caption — below the image */
         .photo-caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 52px 20px 16px;
-            background: linear-gradient(to top,
-                rgba(0,0,0,0.6) 0%,
-                rgba(0,0,0,0.18) 60%,
-                transparent 100%);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 16px;
-            pointer-events: none;
+            padding: 14px 2px 0;
         }
 
-        .caption-left { min-width: 0; }
         .caption-desc {
             display: block;
             font-size: 0.9rem;
             font-weight: 400;
-            color: rgba(255,255,255,0.92);
-            line-height: 1.4;
-            letter-spacing: 0.15px;
-            text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: var(--text);
+            line-height: 1.5;
+            letter-spacing: 0.1px;
         }
         .caption-loc {
             display: block;
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.5);
-            margin-top: 3px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 5px;
         }
-        .caption-right {
-            flex-shrink: 0;
-            text-align: right;
-        }
-        .caption-meta {
-            font-size: 0.68rem;
-            color: rgba(255,255,255,0.38);
-            font-family: ui-monospace, 'SF Mono', monospace;
-            line-height: 1.7;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-        }
-        .caption-meta span { display: block; }
+        .caption-right { display: none; } /* hide EXIF in list, visible in lightbox */
 
         /* ── EMPTY STATE ── */
         .empty-state { display: none; text-align: center; padding: 100px 20px; color: var(--text-muted); }
@@ -244,14 +238,16 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 700px) {
-            .photo-card img { aspect-ratio: 4/3; }
+            .photo-img-wrap img { aspect-ratio: 4/3; }
+            .heic-banner { aspect-ratio: 4/3; }
             .lb-stage { padding: 0 52px; }
+            .photo-card { padding-bottom: 32px; }
         }
         @media (max-width: 480px) {
             .hero-title { font-size: 1.6rem; }
             .lb-meta-strip { gap: 12px; }
             .lb-stage { padding: 0 40px; }
-            .caption-desc { font-size: 0.82rem; }
+            .photo-card { padding-bottom: 24px; }
         }
     </style>
 </head>
@@ -426,16 +422,21 @@ function render() {
                             const metaParts = [p.aperture, p.shutter, p.iso?'ISO '+p.iso:''].filter(Boolean);
                             return `
                             <div class="photo-card" onclick="openLightbox(${idx})">
-                                <img src="${escAttr(p.src)}"
-                                     alt="${escAttr(p.description||'')}"
-                                     loading="lazy"
-                                     onerror="this.closest('.photo-card').style.display='none'">
-                                <div class="photo-caption">
-                                    <div class="caption-left">
-                                        <span class="caption-desc">${escHtml(p.description||'')}</span>
-                                        ${p.location ? `<span class="caption-loc">📍 ${escHtml(p.location)}</span>` : ''}
+                                <div class="photo-img-wrap">
+                                    <img src="${escAttr(p.src)}"
+                                         alt="${escAttr(p.description||'')}"
+                                         loading="lazy"
+                                         onerror="this.style.display='none';this.nextElementSibling.classList.add('visible')">
+                                    <div class="heic-banner">
+                                        <span>🖼</span>
+                                        <div>${escHtml(p.description||'')}</div>
+                                        <div style="font-size:0.72rem;opacity:0.55">HEIC 格式 · 点击在灯箱中查看</div>
                                     </div>
-                                    ${metaParts.length ? `<div class="caption-right">${metaParts.map(s=>`<span class="caption-meta">${escHtml(s)}</span>`).join('')}</div>` : ''}
+                                </div>
+                                <div class="photo-caption">
+                                    <span class="caption-desc">${escHtml(p.description||'')}</span>
+                                    ${p.location ? `<span class="caption-loc">📍 ${escHtml(p.location)}</span>` : ''}
+                                    ${p.date ? `<span class="caption-loc">${p.date}</span>` : ''}
                                 </div>
                             </div>`;
                         }).join('')}
