@@ -4,6 +4,20 @@
 
 const PHOTOS = [
   {
+    id: "1774589999572",
+    date: "2026-03-27",
+    description: "投喂流浪猫",
+    src: "images/photos/1774589999572.jpg",
+    camera: "",
+    lens: "",
+    aperture: "",
+    shutter: "",
+    iso: 0,
+    focalLength: "",
+    location: "",
+    tags: [],
+  },
+  {
     id: "1774589623404",
     date: "2026-02-19",
     description: "宣恩革命历史博物馆",
